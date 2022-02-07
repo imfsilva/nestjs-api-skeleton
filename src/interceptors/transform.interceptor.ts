@@ -7,32 +7,38 @@ import {
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-import { uuid } from '../common/utils';
+import { GeneratorProvider } from '../providers';
 
 export interface ResponseDto<T> {
   requestId: string;
-  code: number;
+  statusCode: number;
   data?: T;
-  error?: T;
+  errors?: string[];
   message?: string;
 }
 
 export function transformToResponseDto<T>(payload: {
-  code: number;
+  statusCode: number;
   data?: T;
-  error?: T;
-  message?: string;
+  message?: string | string[];
 }): ResponseDto<T> {
-  const { code, data, error, message } = payload;
+  const { statusCode, data, message } = payload;
 
-  const response: ResponseDto<T> = { requestId: uuid(), code };
+  const response: ResponseDto<T> = {
+    requestId: GeneratorProvider.uuid(),
+    statusCode,
+  };
 
   if (data) {
-    if (typeof data === 'string') response.message = data;
-    else response.data = data;
+    if (typeof data === 'string') {
+      response.message = data;
+    } else {
+      response.data = data;
+    }
   }
-  if (message) response.message = message;
-  if (error && !message) response.error = error;
+
+  if (typeof message === 'string') response.message = message;
+  else response.errors = message; // errors from validation pipe
 
   return response;
 }
@@ -45,10 +51,10 @@ export class TransformInterceptor<T>
     context: ExecutionContext,
     next: CallHandler,
   ): Observable<ResponseDto<T>> {
-    const code: number = context.switchToHttp().getResponse().statusCode;
+    const statusCode: number = context.switchToHttp().getResponse().statusCode;
 
     return next
       .handle()
-      .pipe(map((data: any) => transformToResponseDto({ code, data })));
+      .pipe(map((data: any) => transformToResponseDto({ statusCode, data })));
   }
 }

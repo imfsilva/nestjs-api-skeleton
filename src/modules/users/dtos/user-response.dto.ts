@@ -1,5 +1,6 @@
-import { Exclude, Expose } from 'class-transformer';
+import { Exclude, Expose, Type } from 'class-transformer';
 import { IsString } from 'class-validator';
+import { SettingResponseDto } from './setting-response.dto';
 
 @Exclude()
 export class UserResponseDto {
@@ -18,4 +19,8 @@ export class UserResponseDto {
   @Expose()
   @IsString()
   readonly email: string;
+
+  @Expose()
+  @Type(() => SettingResponseDto)
+  readonly settings: SettingResponseDto;
 }

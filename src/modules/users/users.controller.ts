@@ -1,31 +1,32 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Patch,
-  Param,
+  Controller,
   Delete,
+  Get,
+  Param,
   ParseUUIDPipe,
+  Patch,
   Query,
-  ValidationPipe,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { plainToClass } from 'class-transformer';
 import { I18nService } from 'nestjs-i18n';
 
 import { UsersService } from './users.service';
-import { CreateUserDto } from './dtos/create-user.dto';
 import { UpdateUserDto } from './dtos/update-user.dto';
 import { UserResponseDto } from './dtos/user-response.dto';
 import { UserEntity } from './entities/user.entity';
 import { FindAllUserDto } from './dtos/find-all-user.dto';
-import { Pagination } from '../../common/pagination';
-import { PaginationResponseDto } from '../../common/pagination/dtos/pagination-response.dto';
-import { ApiPaginatedResponse } from '../../decorators/pagination.decorator';
-import { HttpCodesResponse } from '../../decorators/http-codes.decorator';
+import { RoleType } from '../../constants';
+import {
+  ApiPaginatedResponse,
+  Auth,
+  HttpCodesResponse,
+} from '../../decorators';
+import { Pagination } from '../../utilities/pagination/pagination';
+import { PaginationResponseDto } from '../../utilities/pagination/dtos/pagination-response.dto';
 
 @Controller('users')
+@ApiTags('Users')
 export class UsersController {
   constructor(
     private readonly usersService: UsersService,
@@ -33,7 +34,7 @@ export class UsersController {
   ) {}
 
   @Get()
-  @ApiTags('Users')
+  @Auth([RoleType.ADMIN])
   @ApiPaginatedResponse(UserResponseDto)
   @HttpCodesResponse()
   async findAll(
@@ -51,36 +52,25 @@ export class UsersController {
       await this.usersService.totalRepositoryItems();
 
     return pagination.paginationResult(
-      users.map((user: UserEntity) => plainToClass(UserResponseDto, user)),
+      users.map((user: UserEntity) => user.transform(UserResponseDto, user)),
       totalRepositoryItems,
     );
   }
 
   @Get(':uuid')
-  @ApiTags('Users')
+  @Auth([RoleType.ADMIN])
   @HttpCodesResponse()
   async findOne(
     @Param('uuid', new ParseUUIDPipe())
     uuid: string,
   ) {
-    const user: UserEntity = await this.usersService.findOne(uuid);
+    const user: UserEntity = await this.usersService.findOne({ id: uuid });
 
-    return plainToClass(UserResponseDto, user);
-  }
-
-  @Post()
-  @ApiTags('Users')
-  @HttpCodesResponse()
-  async create(
-    @Body(new ValidationPipe()) createUserDto: CreateUserDto,
-  ): Promise<UserResponseDto> {
-    const user: UserEntity = await this.usersService.create(createUserDto);
-
-    return plainToClass(UserResponseDto, user);
+    return user.transform(UserResponseDto, user);
   }
 
   @Patch(':uuid')
-  @ApiTags('Users')
+  @Auth([RoleType.ADMIN, RoleType.USER])
   @HttpCodesResponse()
   async update(
     @Param('uuid', new ParseUUIDPipe()) uuid: string,
@@ -91,11 +81,11 @@ export class UsersController {
       updateUserDto,
     );
 
-    return plainToClass(UserResponseDto, user);
+    return user.transform(UserResponseDto, user);
   }
 
   @Delete(':uuid')
-  @ApiTags('Users')
+  @Auth([RoleType.ADMIN])
   @HttpCodesResponse()
   async remove(@Param('uuid', new ParseUUIDPipe()) uuid: string) {
     await this.usersService.remove(uuid);

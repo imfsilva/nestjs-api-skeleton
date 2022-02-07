@@ -10,10 +10,9 @@ import { Response } from 'express';
 import { transformToResponseDto } from '../interceptors/transform.interceptor';
 import { HttpArgumentsHost } from '@nestjs/common/interfaces';
 
-export interface HttpExceptionResponse {
-  error?: any;
-  message?: string;
+export interface HttpI18nMessage {
   i18n?: { key: string; args?: Record<string, any> };
+  message?: string | string[];
 }
 
 @Catch(HttpException)
@@ -23,30 +22,31 @@ export class AllExceptionsFilter implements ExceptionFilter {
   async catch(exception: HttpException, host: ArgumentsHost) {
     const ctx: HttpArgumentsHost = host.switchToHttp();
     const response = ctx.getResponse<Response>();
-    const code: number = exception.getStatus();
+    const statusCode: number = exception.getStatus();
 
-    const exceptionResponse: HttpExceptionResponse =
-      exception.getResponse() as HttpExceptionResponse;
+    const exceptionData: HttpI18nMessage =
+      exception.getResponse() as HttpI18nMessage;
 
-    const { message, error, i18n } = exceptionResponse;
+    const { i18n, message } = exceptionData;
 
-    // nestjs default http exceptions
-    if (!i18n && error && message) {
-      return response
-        .status(code)
-        .json(transformToResponseDto({ code, message, error }));
+    if (i18n) {
+      // translate message if i18n property is present on exceptionData
+      const translatedMessage: string = await this.i18n.translate(i18n.key, {
+        lang: ctx.getRequest().i18nLang,
+        args: i18n.args,
+      });
+
+      return response.status(statusCode).json(
+        transformToResponseDto({
+          statusCode,
+          message: translatedMessage,
+        }),
+      );
     }
 
-    // translate message if i18n property is present on exceptionResponse variable
-    const translatedMessage: string = await this.i18n.translate(i18n.key, {
-      lang: ctx.getRequest().i18nLang,
-      args: i18n.args,
-    });
-
+    // untranslated exceptions
     return response
-      .status(code)
-      .json(
-        transformToResponseDto({ code, message: translatedMessage, error }),
-      );
+      .status(statusCode)
+      .json(transformToResponseDto({ statusCode, message }));
   }
 }

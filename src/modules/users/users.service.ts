@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { DeleteResult } from 'typeorm';
+import { DeleteResult, FindConditions } from 'typeorm';
 import { CommandBus } from '@nestjs/cqrs';
+import { plainToClass } from 'class-transformer';
 
 import { UserEntity } from './entities/user.entity';
-import { CreateUserDto } from './dtos/create-user.dto';
 import { UpdateUserDto } from './dtos/update-user.dto';
 import { EmailTakenException, UserNotFoundException } from '../../exceptions';
 import { FindAllUserDto } from './dtos/find-all-user.dto';
@@ -11,7 +11,9 @@ import { CreateSettingDto } from './dtos/create-setting.dto';
 import { UsersRepository } from './users.repository';
 import { CreateSettingCommand } from './handlers/create-setting.handler';
 import { UserSettingsEntity } from './entities/user-settings.entity';
-import { plainToClass } from 'class-transformer';
+import { UserRegisterDto } from '../auth/dtos/user-register.dto';
+import { selfGuard } from '../auth/guards';
+import { ContextProvider } from '../../providers';
 
 @Injectable()
 export class UsersService {
@@ -25,7 +27,9 @@ export class UsersService {
   }
 
   findAll(filters: FindAllUserDto): Promise<UserEntity[]> {
-    const query = this.usersRepository.createQueryBuilder('user');
+    const query = this.usersRepository
+      .createQueryBuilder('user')
+      .leftJoinAndSelect('user.settings', 'user_settings');
 
     query.where('user.softDelete = false');
 
@@ -52,16 +56,17 @@ export class UsersService {
     return query.getMany();
   }
 
-  async findOne(uuid: string): Promise<UserEntity> {
-    const user: UserEntity | undefined = await this.usersRepository.findOne({
-      id: uuid,
-    });
-    if (!user) throw new UserNotFoundException(uuid);
+  async findOne(findData: FindConditions<UserEntity>): Promise<UserEntity> {
+    const user: UserEntity | undefined = await this.usersRepository.findOne(
+      findData,
+      { relations: ['settings'] },
+    );
+    if (!user) throw new UserNotFoundException();
 
     return user;
   }
 
-  async create(createUserDto: CreateUserDto): Promise<UserEntity> {
+  async create(createUserDto: UserRegisterDto): Promise<UserEntity> {
     const takenEmail: UserEntity | undefined =
       await this.usersRepository.findOne({
         email: createUserDto.email,
@@ -86,7 +91,9 @@ export class UsersService {
     uuid: string,
     updateUserDto: UpdateUserDto,
   ): Promise<UserEntity> {
-    const user: UserEntity = await this.findOne(uuid);
+    const user: UserEntity = await this.findOne({ id: uuid });
+
+    selfGuard(ContextProvider.getAuthUser(), user.id);
 
     return this.usersRepository.save(
       this.usersRepository.merge(user, updateUserDto),
@@ -94,7 +101,7 @@ export class UsersService {
   }
 
   async remove(uuid: string): Promise<DeleteResult> {
-    await this.findOne(uuid);
+    await this.findOne({ id: uuid });
 
     return this.usersRepository.delete({ id: uuid });
   }

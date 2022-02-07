@@ -5,13 +5,14 @@ import {
 } from '@nestjs/platform-express';
 import helmet from 'helmet';
 import * as compression from 'compression';
+import { middleware as expressCtx } from 'express-ctx';
 
 import { AppModule } from './app.module';
-import { SharedModule } from './shared/shared.module';
-import { ApiConfigService } from './shared/services/api-config.service';
 import { setupSwagger } from './setup-swagger';
 import { TimeoutInterceptor } from './interceptors/timeout.interceptor';
 import { ValidationPipe } from '@nestjs/common';
+import { ApiConfigService } from './config/services/api-config.service';
+import { ConfigModule } from './config/config.module';
 
 async function bootstrap(): Promise<NestExpressApplication> {
   const app = await NestFactory.create<NestExpressApplication>(
@@ -39,8 +40,11 @@ async function bootstrap(): Promise<NestExpressApplication> {
     }),
   );
 
+  // global middlewares
+  app.use(expressCtx);
+
   const configService: ApiConfigService = app
-    .select(SharedModule)
+    .select(ConfigModule)
     .get(ApiConfigService);
 
   const port: string = configService.appConfig.port;

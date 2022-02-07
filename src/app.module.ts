@@ -1,8 +1,9 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import { ServeStaticModule } from '@nestjs/serve-static';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
+import { ConfigModule } from '@nestjs/config';
 import {
   AcceptLanguageResolver,
   I18nJsonParser,
@@ -10,11 +11,12 @@ import {
 } from 'nestjs-i18n';
 import * as path from 'path';
 
-import { SharedModule } from './shared/shared.module';
-import { ApiConfigService } from './shared/services/api-config.service';
-import { UsersModule } from './modules/users/users.module';
 import { TransformInterceptor } from './interceptors/transform.interceptor';
-import { AllExceptionsFilter } from './filters/http-exception.filter';
+import { AllExceptionsFilter } from './filters';
+import { UsersModule } from './modules/users/users.module';
+import { AuthModule } from './modules/auth/auth.module';
+import { ApiConfigService } from './config/services/api-config.service';
+import { ConfigModule as AppConfigModule } from './config/config.module';
 
 @Module({
   imports: [
@@ -22,8 +24,12 @@ import { AllExceptionsFilter } from './filters/http-exception.filter';
       isGlobal: true,
       envFilePath: '.env',
     }),
+    ServeStaticModule.forRoot({
+      rootPath: path.join(__dirname, '..', 'public'),
+      exclude: ['/api*'],
+    }),
     ThrottlerModule.forRootAsync({
-      imports: [SharedModule],
+      imports: [AppConfigModule],
       inject: [ApiConfigService],
       useFactory: (config: ApiConfigService) => ({
         ttl: config.throttleConfig.ttl,
@@ -31,7 +37,7 @@ import { AllExceptionsFilter } from './filters/http-exception.filter';
       }),
     }),
     TypeOrmModule.forRootAsync({
-      imports: [SharedModule],
+      imports: [AppConfigModule],
       useFactory: (configService: ApiConfigService) =>
         configService.typeormConfig,
       inject: [ApiConfigService],
@@ -44,7 +50,7 @@ import { AllExceptionsFilter } from './filters/http-exception.filter';
           watch: configService.isDevelopment,
         },
       }),
-      imports: [SharedModule],
+      imports: [AppConfigModule],
       inject: [ApiConfigService],
       parser: I18nJsonParser,
       resolvers: [
@@ -55,6 +61,7 @@ import { AllExceptionsFilter } from './filters/http-exception.filter';
       ],
     }),
     UsersModule,
+    AuthModule,
   ],
   providers: [
     {

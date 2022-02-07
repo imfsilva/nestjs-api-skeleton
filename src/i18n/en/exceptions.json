@@ -2,8 +2,9 @@
   "timeout": "Request timeout",
   "bad_request": "Bad request",
   "conflict": "Conflict",
+  "unauthorized": "Unauthorized",
   "not_found": "Not found",
   "validation_error": "Validation error",
-  "user_not_found": "User with ID: {0.uuid} not found",
+  "user_not_found": "User not found",
   "email_taken": "Email {0.email} is taken"
 }

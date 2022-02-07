@@ -1,7 +1,11 @@
 import { OmitType, PartialType } from '@nestjs/swagger';
-
-import { CreateUserDto } from './create-user.dto';
+import { IsBoolean, IsOptional } from 'class-validator';
+import { UserRegisterDto } from '../../auth/dtos/user-register.dto';
 
 export class UpdateUserDto extends PartialType(
-  OmitType(CreateUserDto, ['password'] as const),
-) {}
+  OmitType(UserRegisterDto, ['password'] as const),
+) {
+  @IsBoolean()
+  @IsOptional()
+  softDelete: boolean;
+}

@@ -10,4 +10,4 @@ const providers = [ApiConfigService];
   imports: [],
   exports: [...providers],
 })
-export class SharedModule {}
+export class ConfigModule {}

@@ -1,11 +1,11 @@
 import { HttpException, HttpStatus } from '@nestjs/common';
 
-import { HttpExceptionResponse } from '../filters/http-exception.filter';
+import { HttpI18nMessage } from '../filters';
 
 export class ConflictException extends HttpException {
-  constructor(response: HttpExceptionResponse) {
+  constructor(message?: HttpI18nMessage) {
     super(
-      response ? response : { i18n: { key: 'exceptions.conflict' } },
+      message ? message : { i18n: { key: 'exceptions.conflict' } },
       HttpStatus.CONFLICT,
     );
   }

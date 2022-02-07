@@ -4,6 +4,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { ClassConstructor, plainToClass } from 'class-transformer';
 
 export abstract class AbstractEntity {
   @PrimaryGeneratedColumn('uuid')
@@ -17,4 +18,8 @@ export abstract class AbstractEntity {
 
   @UpdateDateColumn({ type: 'timestamp' })
   updatedAt: Date;
+
+  transform<T, K>(dto: ClassConstructor<T>, plain: K) {
+    return plainToClass(dto, plain);
+  }
 }

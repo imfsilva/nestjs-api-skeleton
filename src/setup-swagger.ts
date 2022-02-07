@@ -1,7 +1,7 @@
 import type { INestApplication } from '@nestjs/common';
 import { DocumentBuilder, OpenAPIObject, SwaggerModule } from '@nestjs/swagger';
 
-import { PaginationResponseDto } from './common/pagination/dtos/pagination-response.dto';
+import { PaginationResponseDto } from './utilities/pagination/dtos/pagination-response.dto';
 
 export function setupSwagger(app: INestApplication): void {
   const documentBuilder = new DocumentBuilder().setTitle('API').addBearerAuth();

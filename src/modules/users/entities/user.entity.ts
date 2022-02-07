@@ -2,9 +2,9 @@ import { BeforeInsert, Column, Entity, OneToOne } from 'typeorm';
 import { Expose } from 'class-transformer';
 
 import { AbstractEntity } from '../../../database/abstract.entity';
-import { Crypto } from '../../../common/crypto';
 import { UserSettingsEntity } from './user-settings.entity';
 import { RoleType } from '../../../constants';
+import { Crypto } from '../../../utilities/crypto';
 
 @Entity({ name: 'users' })
 export class UserEntity extends AbstractEntity {

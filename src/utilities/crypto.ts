@@ -13,6 +13,7 @@ export class Crypto {
 
   /**
    * Generate random 20 bytes hash
+   *
    * @returns {string}
    */
   public randomHash(): string {
@@ -21,6 +22,7 @@ export class Crypto {
 
   /**
    * Generate hash from password or string
+   *
    * @param {string} password
    * @returns {string}
    */
@@ -30,6 +32,7 @@ export class Crypto {
 
   /**
    * Validate text with hash
+   *
    * @param {string} hash
    * @param {string} password
    * @returns {boolean}
