@@ -1,0 +1,37 @@
+version: '3'
+
+services:
+  server:
+    image: node:16
+    working_dir: /usr/src/app
+    command: yarn start:dev
+    networks:
+      - skeleton
+      - default
+    ports:
+      - "3000:3000"
+
+  adminer:
+    image: adminer
+    container_name: skeleton_adminer
+    logging:
+      driver: none
+    ports:
+      - "8080:8080"
+
+  db:
+    environment:
+      POSTGRES_DB: skeleton
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+    ports:
+      - "5432:5432"
+
+  minio:
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+
+networks:
+  skeleton:
+    external: true

@@ -1,0 +1,29 @@
+version: '3'
+
+services:
+  server:
+    container_name: nestjs
+    links:
+      - db
+    volumes:
+      - .:/usr/src/app
+
+  db:
+    image: postgres
+    container_name: skeleton_db
+    logging:
+      driver: none
+    volumes:
+      - ./tmp/pgdata:/var/lib/postgresql/data
+
+  minio:
+    image: minio/minio:latest
+    container_name: skeleton_minio
+    volumes:
+      - ./tmp/minio-data:/data
+    logging:
+      driver: none
+    environment:
+      MINIO_ROOT_USER: minio
+      MINIO_ROOT_PASSWORD: minio123
+    command: minio server --console-address ":9001" /data
