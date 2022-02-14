@@ -1,10 +1,10 @@
-import * as dotenv from 'dotenv';
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
+import * as dotenv from 'dotenv';
 import * as path from 'path';
 
 import { SnakeNamingStrategy } from './snake-naming.strategy';
 
-dotenv.config({ path: '.env' });
+dotenv.config({ path: `.env.${process.env.NODE_ENV}` });
 
 const environment = process.env.NODE_ENV;
 

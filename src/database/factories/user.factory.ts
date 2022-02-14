@@ -13,7 +13,7 @@ define(UserEntity, (faker) => {
   user.firstName = firstName;
   user.lastName = lastName;
   user.email = email;
-  user.role = RoleType.USER;
+  user.role = RoleType.ADMIN;
   user.password = '12345';
 
   return user;

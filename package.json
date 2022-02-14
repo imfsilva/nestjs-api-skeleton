@@ -10,9 +10,9 @@
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
-    "start:dev": "nest start --watch",
-    "start:debug": "nest start --debug --watch",
-    "start:prod": "node dist/main",
+    "start:dev": "NODE_ENV=development nest start --watch",
+    "start:debug": "NODE_ENV=development nest start --debug --watch",
+    "start:prod": "yarn prebuild && yarn build && yarn pm2:prod",
     "seed:config": "yarn typeorm-seeding config",
     "seed:run": "yarn typeorm-seeding seed",
     "schema:drop": "yarn typeorm schema:drop",
@@ -25,7 +25,8 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "typeorm": "ts-node ./node_modules/typeorm/cli.js --config src/database/ormconfig.ts",
-    "typeorm-seeding": "ts-node ./node_modules/typeorm-seeding/dist/cli.js --root ./src/database --configName ormconfig.ts"
+    "typeorm-seeding": "ts-node ./node_modules/typeorm-seeding/dist/cli.js --root ./src/database --configName ormconfig.ts",
+    "pm2:prod": "pm2 start ecosystem.json --no-daemon --env production"
   },
   "dependencies": {
     "@nestjs-modules/mailer": "^1.6.1",
@@ -55,6 +56,7 @@
     "passport": "^0.5.2",
     "passport-jwt": "^4.0.0",
     "pg": "^8.7.1",
+    "pm2": "^5.1.2",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
     "rxjs": "^7.2.0",

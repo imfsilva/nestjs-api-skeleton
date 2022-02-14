@@ -1,0 +1,14 @@
+{
+  "apps": [
+    {
+      "name": "skeleton_nestjs",
+      "script": "dist/main.js",
+      "merge_logs": true,
+      "instances": 4,
+      "autorestart": true,
+      "max_restarts": 20,
+      "max_memory_restart": "200M",
+      "env_production": { "NODE_ENV": "production" }
+    }
+  ]
+}
