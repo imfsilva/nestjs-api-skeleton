@@ -1,10 +1,17 @@
-import { Controller, Get, Render } from '@nestjs/common';
+import { Controller, Get } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
+
+import { AppService } from './app.service';
+import { Public } from './common/decorators';
 
 @Controller()
 export class AppController {
+  constructor(private readonly appService: AppService) {}
+
+  @Public()
   @Get()
-  @Render('index')
-  welcome() {
-    // this controller renders a welcome page
+  @ApiTags('Welcome')
+  welcome(): string {
+    return this.appService.getWelcomeMessage();
   }
 }

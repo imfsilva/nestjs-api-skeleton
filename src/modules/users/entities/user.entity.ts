@@ -1,10 +1,10 @@
 import { BeforeInsert, Column, Entity, OneToOne } from 'typeorm';
-import { Expose } from 'class-transformer';
 
-import { AbstractEntity } from '../../../database/abstract.entity';
+import { AbstractEntity } from '../../../common/abstract.entity';
 import { UserSettingsEntity } from './user-settings.entity';
-import { RoleType } from '../../../constants';
-import { Crypto } from '../../../utilities/crypto';
+import { RoleType } from '../../../common/constants';
+import { Crypto } from '../../../common/utilities';
+import { UserImageEntity } from './user-image.entity';
 
 @Entity({ name: 'users' })
 export class UserEntity extends AbstractEntity {
@@ -23,20 +23,32 @@ export class UserEntity extends AbstractEntity {
   @Column({ nullable: true })
   password: string;
 
+  @Column({ nullable: true, type: 'varchar' })
+  recoverPasswordToken: string | null;
+
+  @Column({ nullable: true, type: 'bigint' })
+  recoverPasswordExpiration: number | null;
+
+  @Column({ default: null, type: 'varchar' })
+  hashedRt: string | null;
+
   @OneToOne(
     () => UserSettingsEntity,
     (settings: UserSettingsEntity) => settings.user,
   )
   settings: UserSettingsEntity;
 
-  @Expose()
+  @OneToOne(() => UserImageEntity, (image: UserImageEntity) => image.user, {
+    nullable: true,
+  })
+  image: UserImageEntity | null;
+
   get fullName(): string {
     return `${this.firstName} ${this.lastName}`;
   }
 
   @BeforeInsert()
   async hashPassword() {
-    const crypto = new Crypto();
-    this.password = crypto.generateHash(this.password);
+    this.password = Crypto.generateHash(this.password);
   }
 }

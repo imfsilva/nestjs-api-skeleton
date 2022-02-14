@@ -3,16 +3,17 @@ import {
   ExpressAdapter,
   NestExpressApplication,
 } from '@nestjs/platform-express';
-import helmet from 'helmet';
+import { ValidationPipe } from '@nestjs/common';
 import * as compression from 'compression';
 import { middleware as expressCtx } from 'express-ctx';
+import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
 
 import { AppModule } from './app.module';
-import { setupSwagger } from './setup-swagger';
-import { TimeoutInterceptor } from './interceptors/timeout.interceptor';
-import { ValidationPipe } from '@nestjs/common';
-import { ApiConfigService } from './config/services/api-config.service';
-import { ConfigModule } from './config/config.module';
+import { TimeoutInterceptor } from './modules/core/interceptors';
+import { setupSwagger } from './config/setup-swagger';
+import { ConfigService } from './modules/shared/services/config.service';
+import { SharedModule } from './modules/shared/shared.module';
+import { S3Service } from './modules/shared/services/s3.service';
 
 async function bootstrap(): Promise<NestExpressApplication> {
   const app = await NestFactory.create<NestExpressApplication>(
@@ -21,8 +22,11 @@ async function bootstrap(): Promise<NestExpressApplication> {
     { cors: true },
   );
 
+  const configService: ConfigService = app
+    .select(SharedModule)
+    .get(ConfigService);
+
   app.use(compression());
-  app.use(helmet());
 
   // swagger config
   setupSwagger(app);
@@ -43,9 +47,11 @@ async function bootstrap(): Promise<NestExpressApplication> {
   // global middlewares
   app.use(expressCtx);
 
-  const configService: ApiConfigService = app
-    .select(ConfigModule)
-    .get(ApiConfigService);
+  // implement winston logger
+  app.useLogger(app.get(WINSTON_MODULE_NEST_PROVIDER));
+
+  const s3Service: S3Service = app.select(SharedModule).get(S3Service);
+  await s3Service.createBucketIfNotExist();
 
   const port: string = configService.appConfig.port;
   await app.listen(port);

@@ -13,8 +13,8 @@ export class UserSettingsEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ default: false })
-  isEmailVerified: boolean;
+  @Column()
+  language: string;
 
   @Column({ type: 'uuid' })
   userId: string;

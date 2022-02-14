@@ -3,27 +3,35 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
+  HttpStatus,
   Param,
   ParseUUIDPipe,
   Patch,
+  Post,
   Query,
+  UploadedFile,
+  UseInterceptors,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { I18nService } from 'nestjs-i18n';
 
 import { UsersService } from './users.service';
-import { UpdateUserDto } from './dtos/update-user.dto';
-import { UserResponseDto } from './dtos/user-response.dto';
+import { FindAllUserDto, UpdateUserDto, UserDto } from './dtos';
 import { UserEntity } from './entities/user.entity';
-import { FindAllUserDto } from './dtos/find-all-user.dto';
-import { RoleType } from '../../constants';
 import {
+  ApiFile,
   ApiPaginatedResponse,
-  Auth,
+  GetCurrentUser,
   HttpCodesResponse,
-} from '../../decorators';
-import { Pagination } from '../../utilities/pagination/pagination';
-import { PaginationResponseDto } from '../../utilities/pagination/dtos/pagination-response.dto';
+} from '../../common/decorators';
+import { Pagination } from '../../common/utilities';
+import { PaginationResponseDto } from '../../common/utilities/pagination/dtos/pagination-response.dto';
+import { AllowedRoles } from '../../common/decorators/allowed-roles.decorator';
+import { RoleType } from '../../common/constants';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { ImageFileFilter } from '../../common/filters';
+import { ChangePasswordDto } from './dtos/requests/change-password.dto';
 
 @Controller('users')
 @ApiTags('Users')
@@ -34,12 +42,12 @@ export class UsersController {
   ) {}
 
   @Get()
-  @Auth([RoleType.ADMIN])
-  @ApiPaginatedResponse(UserResponseDto)
+  @AllowedRoles([RoleType.ADMIN])
+  @ApiPaginatedResponse(UserDto)
   @HttpCodesResponse()
   async findAll(
     @Query() filters: FindAllUserDto,
-  ): Promise<PaginationResponseDto<UserResponseDto>> {
+  ): Promise<PaginationResponseDto<UserDto>> {
     const pagination = new Pagination(filters.skip, filters.take);
 
     const users: UserEntity[] = await this.usersService.findAll({
@@ -52,44 +60,89 @@ export class UsersController {
       await this.usersService.totalRepositoryItems();
 
     return pagination.paginationResult(
-      users.map((user: UserEntity) => user.transform(UserResponseDto, user)),
+      users.map((user: UserEntity) => user.transform(UserDto, user)),
       totalRepositoryItems,
     );
   }
 
+  @Patch('/change-password')
+  @HttpCodesResponse()
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Password changed successfully',
+  })
+  async changePassword(
+    @GetCurrentUser() user: UserEntity,
+    @Body() changePasswordDto: ChangePasswordDto,
+  ): Promise<string> {
+    await this.usersService.changePassword(user, changePasswordDto);
+    return this.i18n.translate('user.password_changed');
+  }
+
+  @Post('/upload-image')
+  @HttpCode(HttpStatus.OK)
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Image uploaded successfully',
+  })
+  @HttpCodesResponse()
+  @ApiFile('image')
+  @UseInterceptors(FileInterceptor('image', { fileFilter: ImageFileFilter }))
+  async uploadFile(
+    @GetCurrentUser() user: UserEntity,
+    @UploadedFile() file: Express.Multer.File,
+  ): Promise<string> {
+    await this.usersService.createImage(user, file);
+    return this.i18n.translate('user.image_uploaded');
+  }
+
+  @Delete('/delete-image')
+  @HttpCode(HttpStatus.OK)
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Image deleted successfully',
+  })
+  @HttpCodesResponse()
+  async deleteFile(@GetCurrentUser() user: UserEntity): Promise<string> {
+    await this.usersService.deleteImage(user.id, user.image);
+    return this.i18n.translate('user.image_deleted');
+  }
+
   @Get(':uuid')
-  @Auth([RoleType.ADMIN])
+  @AllowedRoles([RoleType.ADMIN])
   @HttpCodesResponse()
   async findOne(
     @Param('uuid', new ParseUUIDPipe())
     uuid: string,
   ) {
     const user: UserEntity = await this.usersService.findOne({ id: uuid });
-
-    return user.transform(UserResponseDto, user);
+    return user.transform(UserDto, user);
   }
 
   @Patch(':uuid')
-  @Auth([RoleType.ADMIN, RoleType.USER])
   @HttpCodesResponse()
   async update(
     @Param('uuid', new ParseUUIDPipe()) uuid: string,
     @Body() updateUserDto: UpdateUserDto,
-  ): Promise<UserResponseDto> {
-    const user: UserEntity = await this.usersService.update(
+  ): Promise<UserDto> {
+    const user: UserEntity = await this.usersService.updateUserWithGuard(
       uuid,
       updateUserDto,
     );
-
-    return user.transform(UserResponseDto, user);
+    return user.transform(UserDto, user);
   }
 
   @Delete(':uuid')
-  @Auth([RoleType.ADMIN])
+  @AllowedRoles([RoleType.ADMIN])
   @HttpCodesResponse()
-  async remove(@Param('uuid', new ParseUUIDPipe()) uuid: string) {
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'User deleted successfully',
+  })
+  async delete(
+    @Param('uuid', new ParseUUIDPipe()) uuid: string,
+  ): Promise<string> {
     await this.usersService.remove(uuid);
-
-    return this.i18n.translate('user.user_removed', { args: { uuid } });
+    return this.i18n.translate('user.user_deleted', { args: { uuid } });
   }
 }

@@ -1,3 +1,6 @@
 {
-  "user_removed": "User with ID: {0.uuid} was removed"
+  "user_deleted": "User with ID: {0.uuid} was deleted",
+  "image_uploaded": "User profile image has been uploaded",
+  "image_deleted": "User profile image was deleted",
+  "password_changed": "Password has been changed"
 }
