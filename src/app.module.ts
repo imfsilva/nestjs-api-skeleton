@@ -47,6 +47,7 @@ import { AppService } from './app.service';
     }),
     ServeStaticModule.forRoot({
       rootPath: path.join(__dirname, '/public'),
+      serveRoot: '/public',
     }),
     ThrottlerModule.forRootAsync({
       imports: [SharedModule],

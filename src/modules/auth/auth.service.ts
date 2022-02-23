@@ -36,9 +36,16 @@ export class AuthService {
   ) {}
 
   async login(dto: LoginDto): Promise<LoggedInDto> {
-    const user: UserEntity = await this.usersService.findOne({
+    const user: UserEntity | undefined = await this.usersService.findOne({
       email: dto.email,
     });
+    if (!user) {
+      const exceptionMessage: string = await this.i18n.translate(
+        'exceptions.user_email_not_found',
+        { args: { email: dto.email } },
+      );
+      throw new UserNotFoundException(exceptionMessage);
+    }
 
     const isPasswordValid: boolean = Crypto.validateHash(
       user.password,
@@ -109,7 +116,7 @@ export class AuthService {
     forgotPasswordDto: ForgotPasswordDto,
   ): Promise<void> {
     const exceptionMessage: string = await this.i18n.translate(
-      'user_email_not_found',
+      'exceptions.user_email_not_found',
       { args: { email: forgotPasswordDto.email } },
     );
 

@@ -77,10 +77,9 @@ export class UsersService {
   }
 
   async create(dto: RegisterDto): Promise<UserEntity> {
-    const takenEmail: UserEntity | undefined =
-      await this.usersRepository.findOne({
-        email: dto.email,
-      });
+    const takenEmail: UserEntity | undefined = await this.findOne({
+      email: dto.email,
+    });
     if (takenEmail) throw new EmailTakenException(dto.email);
 
     const user: UserEntity = this.usersRepository.create(dto);
@@ -106,7 +105,7 @@ export class UsersService {
     );
   }
 
-  async updateUserWithGuard(
+  async updateWithGuard(
     uuid: string,
     dto: Partial<UserEntity>,
   ): Promise<UserEntity> {

@@ -10,7 +10,7 @@ services:
 
   db:
     environment:
-      POSTGRES_DB: skeleton
+      POSTGRES_MULTIPLE_DATABASES: skeleton,skeleton_test
       POSTGRES_USER: root
       POSTGRES_PASSWORD: root
     ports:

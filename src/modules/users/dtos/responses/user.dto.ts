@@ -1,6 +1,6 @@
 import { Exclude, Expose, Type } from 'class-transformer';
 
-import { SettingDto } from './setting.dto';
+import { SettingsDto } from './settings.dto';
 import { ImageDto } from './image.dto';
 
 @Exclude()
@@ -25,6 +25,6 @@ export class UserDto {
   readonly image: ImageDto;
 
   @Expose()
-  @Type(() => SettingDto)
-  readonly settings: SettingDto;
+  @Type(() => SettingsDto)
+  readonly settings: SettingsDto;
 }

@@ -5,16 +5,16 @@ import {
   HttpCode,
   HttpStatus,
   Param,
+  Patch,
   Post,
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { I18nService } from 'nestjs-i18n';
 import { Request } from 'express';
 
 import { AuthService } from './auth.service';
-import { Tokens } from './types';
 import { GetCurrentUser, Public } from '../../common/decorators';
 import { RtGuard } from './guards';
 import { UserEntity } from '../users/entities/user.entity';
@@ -28,6 +28,7 @@ import {
   RegisteredDto,
   ForgotPasswordDto,
   RecoverPasswordDto,
+  RefreshTokenDto,
 } from './dtos';
 
 @Controller('auth')
@@ -53,28 +54,41 @@ export class AuthController {
 
   @Post('logout')
   @HttpCode(HttpStatus.OK)
-  logout(@GetCurrentUser() user: UserEntity): Promise<boolean> {
-    return this.authService.logout(user);
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Logged out',
+  })
+  async logout(@GetCurrentUser() user: UserEntity): Promise<string> {
+    await this.authService.logout(user);
+    return this.i18n.translate('auth.logged_out');
   }
 
   @Get('me')
-  me(@GetCurrentUser() user: UserEntity): UserDto {
+  async me(@GetCurrentUser() user: UserEntity): Promise<UserDto> {
     return user.transform(UserDto, user);
   }
 
   @Public()
   @UseGuards(RtGuard)
-  @Get('refresh-token')
+  @Post('refresh-token')
+  @HttpCode(HttpStatus.OK)
   refreshTokens(
     // refresh token is injected in RtGuard
-    @GetCurrentUser() user: { user: UserEntity; refreshToken: string },
-  ): Promise<Tokens> {
-    return this.authService.refreshTokens(user.user, user.refreshToken);
+    @GetCurrentUser() currentUser: { user: UserEntity; refreshToken: string },
+  ): Promise<RefreshTokenDto> {
+    return this.authService.refreshTokens(
+      currentUser.user,
+      currentUser.refreshToken,
+    );
   }
 
   @Public()
   @Post('forgot-password')
   @HttpCode(HttpStatus.OK)
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Forgot password email sent',
+  })
   async forgotPassword(
     @Req() req: Request,
     @Body() forgotPasswordDto: ForgotPasswordDto,
@@ -94,8 +108,9 @@ export class AuthController {
   }
 
   @Public()
-  @Post('/recover-password')
+  @Patch('/recover-password')
   @HttpCode(HttpStatus.OK)
+  @ApiResponse({ status: HttpStatus.OK, description: 'Password recovered' })
   async recoverPassword(
     @Body() recoverPasswordDto: RecoverPasswordDto,
   ): Promise<string> {

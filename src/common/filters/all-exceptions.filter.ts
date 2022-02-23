@@ -4,12 +4,15 @@ import {
   Catch,
   HttpException,
   HttpStatus,
+  Inject,
+  Logger,
 } from '@nestjs/common';
 import { I18nService } from 'nestjs-i18n';
 import { Response } from 'express';
+import { HttpArgumentsHost } from '@nestjs/common/interfaces';
+import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 
 import { transformToResponseDto } from '../../modules/core/interceptors';
-import { HttpArgumentsHost } from '@nestjs/common/interfaces';
 
 export interface HttpI18nMessage {
   i18n?: { key: string; args?: Record<string, any> };
@@ -19,7 +22,10 @@ export interface HttpI18nMessage {
 
 @Catch()
 export class AllExceptionsFilter implements ExceptionFilter {
-  constructor(private readonly i18n: I18nService) {}
+  constructor(
+    @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger,
+    private readonly i18n: I18nService,
+  ) {}
 
   async catch(exception: any, host: ArgumentsHost) {
     const ctx: HttpArgumentsHost = host.switchToHttp();
@@ -33,6 +39,10 @@ export class AllExceptionsFilter implements ExceptionFilter {
         exception.getResponse() as HttpI18nMessage;
 
       const { i18n, message } = exceptionData;
+
+      if (statusCode === HttpStatus.INTERNAL_SERVER_ERROR) {
+        this.logger.error(exceptionData);
+      }
 
       if (i18n) {
         // translate message if i18n property is present on exceptionData

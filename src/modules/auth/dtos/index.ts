@@ -4,3 +4,4 @@ export * from './requests/forgot-password.dto';
 export * from './requests/recover-password.dto';
 export * from './responses/logged-in.dto';
 export * from './responses/registered.dto';
+export * from './responses/refresh-token.dto';

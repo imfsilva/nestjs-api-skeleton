@@ -8,7 +8,7 @@
 
 ## Environment variables
 
-Valid environment variable files: `.env.development`, `.env.staging`, `.env.production`.
+Valid environment variable files: `.env.development`, `.env.staging`, `.env.production`, `.env.test`.
 
 Example environment file:
 
@@ -96,6 +96,8 @@ $ yarn seed:run
 ```
 
 ## Tests
+
+Create `.env.test` file in the root of the project.
 
 ```shell
 $ yarn test

@@ -102,7 +102,7 @@
               }
 
               const req = await fetch(`/auth/recover-password`, {
-                method: 'POST',
+                method: 'PATCH',
                 headers: {
                   'Accept-Language': 'en',
                   'Content-Type': 'application/json',
@@ -182,7 +182,7 @@
                   <button
                     type="submit"
                     class="btn btn-success"
-                    :disabled="loading"
+                    :disabled="loading || !form.confirmPassword || !form.newPassword"
                   >
                     <span
                       v-if="loading"

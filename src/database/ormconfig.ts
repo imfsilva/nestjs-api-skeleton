@@ -18,6 +18,7 @@ const connectionOptions: TypeOrmModuleOptions & {
   factories: [__dirname + '/factories/*{.ts,.js}'],
   dropSchema: environment === 'test',
   synchronize: environment === 'development',
+  keepConnectionAlive: true,
   type: 'postgres',
   name: 'default',
   url: process.env.DB_URL,

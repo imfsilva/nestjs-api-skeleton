@@ -79,7 +79,7 @@ export class UsersController {
     return this.i18n.translate('user.password_changed');
   }
 
-  @Post('/upload-image')
+  @Post('/image')
   @HttpCode(HttpStatus.OK)
   @ApiResponse({
     status: HttpStatus.OK,
@@ -96,7 +96,7 @@ export class UsersController {
     return this.i18n.translate('user.image_uploaded');
   }
 
-  @Delete('/delete-image')
+  @Delete('/image')
   @HttpCode(HttpStatus.OK)
   @ApiResponse({
     status: HttpStatus.OK,
@@ -125,7 +125,7 @@ export class UsersController {
     @Param('uuid', new ParseUUIDPipe()) uuid: string,
     @Body() updateUserDto: UpdateUserDto,
   ): Promise<UserDto> {
-    const user: UserEntity = await this.usersService.updateUserWithGuard(
+    const user: UserEntity = await this.usersService.updateWithGuard(
       uuid,
       updateUserDto,
     );

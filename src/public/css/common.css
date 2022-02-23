@@ -1,3 +1,14 @@
+@media screen {
+  @font-face {
+    font-family: 'Source Sans Pro';
+    font-style: normal;
+    font-weight: 400;
+    src: local('Source Sans Pro Regular'), local('SourceSansPro-Regular'),
+      url(https://fonts.gstatic.com/s/sourcesanspro/v10/ODelI1aHBYDBqgeIAH2zlBM0YzuT7MdOe03otPbuUS0.woff)
+        format('woff');
+  }
+}
+
 .vertical-center {
   min-height: 100%; /* Fallback for browsers do NOT support vh unit */
   min-height: 100vh;
@@ -10,6 +21,7 @@ html,
 body {
   background-color: #061857;
   color: #ffffff;
+  font-family: 'Source Sans Pro', sans-serif;
 }
 
 a,
@@ -27,5 +39,5 @@ a:hover {
 
 .logo img {
   width: 200px;
-  margin-bottom: 30px;
+  margin-bottom: 25px;
 }

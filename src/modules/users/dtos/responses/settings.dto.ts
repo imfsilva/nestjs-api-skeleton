@@ -1,7 +1,7 @@
 import { Exclude, Expose } from 'class-transformer';
 
 @Exclude()
-export class SettingDto {
+export class SettingsDto {
   @Expose()
   language: boolean;
 }

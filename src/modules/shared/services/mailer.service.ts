@@ -16,7 +16,8 @@ export class MailerService {
       { lang: user.settings.language },
     );
 
-    const changePasswordButtonHref = `${appUrl}/recover-password/${user.settings.language}.html?token=${user.recoverPasswordToken}`;
+    const changePasswordButtonHref = `${appUrl}/public/recover-password/${user.settings.language}.html?token=${user.recoverPasswordToken}`;
+    const logoUrl = `${appUrl}/public/images/logo.png`;
 
     await this.mailerService.sendMail({
       to: [user.email],
@@ -24,6 +25,7 @@ export class MailerService {
       template: `recover-password-${user.settings.language}`,
       context: {
         userFullName: user.fullName,
+        logoUrl,
         changePasswordButtonHref,
       },
     });
