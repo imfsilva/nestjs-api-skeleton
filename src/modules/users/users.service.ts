@@ -22,6 +22,7 @@ import { CreateSettingDto, FindAllUserDto } from './dtos';
 import { Crypto } from '../../common/utilities';
 import { RegisterDto } from '../auth/dtos';
 import { ChangePasswordDto } from './dtos/requests/change-password.dto';
+import { ContextProvider } from '../../common/providers';
 
 @Injectable()
 export class UsersService {
@@ -31,13 +32,15 @@ export class UsersService {
     private readonly usersImageRepository: UsersImageRepository,
     private readonly s3Service: S3Service,
     private readonly commandBus: CommandBus,
+    private readonly crypto: Crypto,
+    private readonly contextProvider: ContextProvider,
   ) {}
 
   async totalRepositoryItems(): Promise<number> {
     return this.usersRepository.count();
   }
 
-  findAll(filters: FindAllUserDto): Promise<UserEntity[]> {
+  async findAll(filters: FindAllUserDto): Promise<UserEntity[]> {
     const query = this.usersRepository
       .createQueryBuilder('user')
       .leftJoinAndSelect('user.settings', 'user_settings')
@@ -70,10 +73,15 @@ export class UsersService {
 
   async findOne(
     findData: FindConditions<UserEntity>,
+    throwNotFoundException = false,
   ): Promise<UserEntity | undefined> {
-    return await this.usersRepository.findOne(findData, {
+    const user: UserEntity | undefined = await this.usersRepository.findOne(findData, {
       relations: ['settings', 'image'],
     });
+
+    if (!user && throwNotFoundException) throw new UserNotFoundException();
+
+    return user;
   }
 
   async create(dto: RegisterDto): Promise<UserEntity> {
@@ -96,47 +104,32 @@ export class UsersService {
     return user;
   }
 
-  async update(
-    user: UserEntity,
-    updateData: DeepPartial<UserEntity>,
-  ): Promise<UserEntity> {
-    return await this.usersRepository.save(
-      this.usersRepository.merge(user, updateData),
-    );
+  async update(user: UserEntity, updateData: DeepPartial<UserEntity>): Promise<UserEntity> {
+    return await this.usersRepository.save(this.usersRepository.merge(user, updateData));
   }
 
-  async updateWithGuard(
-    uuid: string,
-    dto: Partial<UserEntity>,
-  ): Promise<UserEntity> {
-    const user: UserEntity | undefined = await this.findOne({ id: uuid });
-    if (!user) throw new UserNotFoundException();
+  async updateWithGuard(uuid: string, dto: Partial<UserEntity>): Promise<UserEntity> {
+    const user: UserEntity = await this.findOne({ id: uuid }, true);
 
-    selfGuard(user.id);
+    selfGuard(this.contextProvider, user.id);
 
     return this.update(user, dto);
   }
 
-  async changePassword(
-    user: UserEntity,
-    changePasswordDto: ChangePasswordDto,
-  ): Promise<void> {
-    if (
-      !Crypto.validateHash(user.password, changePasswordDto.currentPassword)
-    ) {
+  async changePassword(user: UserEntity, changePasswordDto: ChangePasswordDto): Promise<void> {
+    if (!this.crypto.validateHash(user.password, changePasswordDto.currentPassword)) {
       throw new InvalidCredentialsException();
     }
 
-    selfGuard(user.id);
+    selfGuard(this.contextProvider, user.id);
 
     await this.update(user, {
-      password: Crypto.generateHash(changePasswordDto.newPassword),
+      password: this.crypto.generateHash(changePasswordDto.newPassword),
     });
   }
 
   async remove(uuid: string): Promise<DeleteResult> {
-    const user: UserEntity | undefined = await this.findOne({ id: uuid });
-    if (!user) throw new UserNotFoundException();
+    await this.findOne({ id: uuid }, true);
 
     return this.usersRepository.delete({ id: uuid });
   }
@@ -151,21 +144,14 @@ export class UsersService {
   }
 
   async setHashedRt(user: UserEntity, hashedRt: string): Promise<void> {
-    await this.usersRepository.save(
-      this.usersRepository.merge(user, { hashedRt }),
-    );
+    await this.usersRepository.save(this.usersRepository.merge(user, { hashedRt }));
   }
 
   async revokeHashedRt(user: UserEntity): Promise<void> {
-    await this.usersRepository.save(
-      this.usersRepository.merge(user, { hashedRt: null }),
-    );
+    await this.usersRepository.save(this.usersRepository.merge(user, { hashedRt: null }));
   }
 
-  async createImage(
-    user: UserEntity,
-    file: Express.Multer.File,
-  ): Promise<void> {
+  async createImage(user: UserEntity, file: Express.Multer.File): Promise<void> {
     if (user.image) {
       await this.deleteImage(user.id, user.image);
       await this.s3Service.deleteFile({
@@ -177,9 +163,7 @@ export class UsersService {
     }
 
     // save main entity
-    const extension: string = this.s3Service.getFileExtension(
-      file.originalname,
-    );
+    const extension: string = this.s3Service.getFileExtension(file.originalname);
     const entity = this.usersImageRepository.create({
       extension,
       userId: user.id,
@@ -196,10 +180,7 @@ export class UsersService {
     });
   }
 
-  async deleteImage(
-    userId: string,
-    image: UserImageEntity | null,
-  ): Promise<void> {
+  async deleteImage(userId: string, image: UserImageEntity | null): Promise<void> {
     if (!image) throw new NotFoundException('User has no assigned image');
     await this.usersImageRepository.delete({ id: image.id });
     await this.s3Service.deleteFile({

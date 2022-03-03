@@ -110,7 +110,7 @@ export class ConfigService {
   get S3Config() {
     return {
       url: this.getString('S3_URL'),
-      publicUrl: this.get('S3_PUBLIC_URL'),
+      publicUrl: this.getString('S3_PUBLIC_URL'),
       bucketName: this.getString('S3_BUCKET_NAME'),
       accessKey: this.getString('S3_ACCESS_KEY'),
       secretKey: this.getString('S3_SECRET_KEY'),

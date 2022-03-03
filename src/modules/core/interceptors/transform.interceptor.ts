@@ -1,9 +1,4 @@
-import {
-  Injectable,
-  NestInterceptor,
-  ExecutionContext,
-  CallHandler,
-} from '@nestjs/common';
+import { Injectable, NestInterceptor, ExecutionContext, CallHandler } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
@@ -30,11 +25,8 @@ export function transformToResponseDto<T>(payload: {
   };
 
   if (data) {
-    if (typeof data === 'string') {
-      response.message = data;
-    } else {
-      response.data = data;
-    }
+    if (typeof data === 'string') response.message = data;
+    else response.data = data;
   }
 
   if (typeof message === 'string') response.message = message;
@@ -44,17 +36,10 @@ export function transformToResponseDto<T>(payload: {
 }
 
 @Injectable()
-export class TransformInterceptor<T>
-  implements NestInterceptor<T, ResponseDto<T>>
-{
-  intercept(
-    context: ExecutionContext,
-    next: CallHandler,
-  ): Observable<ResponseDto<T>> {
+export class TransformInterceptor<T> implements NestInterceptor<T, ResponseDto<T>> {
+  intercept(context: ExecutionContext, next: CallHandler): Observable<ResponseDto<T>> {
     const statusCode: number = context.switchToHttp().getResponse().statusCode;
 
-    return next
-      .handle()
-      .pipe(map((data: any) => transformToResponseDto({ statusCode, data })));
+    return next.handle().pipe(map((data: any) => transformToResponseDto({ statusCode, data })));
   }
 }

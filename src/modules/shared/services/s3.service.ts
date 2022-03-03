@@ -25,7 +25,7 @@ export class S3Service {
     private readonly configService: ConfigService,
   ) {}
 
-  private static bucketMetadata(mimetype: string): ItemBucketMetadata {
+  private bucketMetadata(mimetype: string): ItemBucketMetadata {
     return { 'Content-type': mimetype, 'x-amz-acl': '' + 'public-read' };
   }
 
@@ -61,6 +61,11 @@ export class S3Service {
     fileId: string;
     fileExtension: string;
   }): string {
+    /**
+     * This function has to be static because we need to use it in the
+     * Typeorm entity classes without having to instance S3Service class
+     */
+
     const { module, fileExtension, fileId, proprietaryId } = dto;
     const { S3_PUBLIC_URL, S3_BUCKET_NAME, NODE_ENV } = process.env;
 
@@ -72,19 +77,14 @@ export class S3Service {
   }
 
   getFileExtension(originalname: string): string {
-    return originalname.substring(
-      originalname.lastIndexOf('.'),
-      originalname.length,
-    );
+    return originalname.substring(originalname.lastIndexOf('.'), originalname.length);
   }
 
   async uploadSingleFile(dto: FileDto): Promise<void> {
     const { moduleName, proprietaryId, file, fileId } = dto;
     const extension: string = this.getFileExtension(file.originalname);
     const filePath = `/${moduleName}/${proprietaryId}/${fileId}${extension}`;
-    const metadata: ItemBucketMetadata = S3Service.bucketMetadata(
-      file.mimetype,
-    );
+    const metadata: ItemBucketMetadata = this.bucketMetadata(file.mimetype);
 
     await this.minioClient.putObject(
       this.configService.S3Config.bucketName,
@@ -104,9 +104,6 @@ export class S3Service {
     const { moduleName, proprietaryId, fileId, fileExtension } = dto;
     const filePath = `/${moduleName}/${proprietaryId}/${fileId}${fileExtension}`;
 
-    await this.minioClient.removeObject(
-      this.configService.S3Config.bucketName,
-      filePath,
-    );
+    await this.minioClient.removeObject(this.configService.S3Config.bucketName, filePath);
   }
 }

@@ -3,9 +3,7 @@ import { ApiOkResponse, getSchemaPath } from '@nestjs/swagger';
 
 import { PaginationResponseDto } from '../utilities/pagination/dtos/pagination-response.dto';
 
-export const ApiPaginatedResponse = <TModel extends Type<any>>(
-  model: TModel,
-) => {
+export const ApiPaginatedResponse = <TModel extends Type<any>>(model: TModel) => {
   return applyDecorators(
     ApiOkResponse({
       schema: {

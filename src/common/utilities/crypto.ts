@@ -14,7 +14,7 @@ export class Crypto {
    *
    * @returns {string}
    */
-  public static randomHash(): string {
+  public randomHash(): string {
     return cryptojs.lib.WordArray.random(30).toString();
   }
 
@@ -24,11 +24,8 @@ export class Crypto {
    * @param {string} string
    * @returns {string}
    */
-  public static generateHash(string: string): string {
-    return cryptojs.AES.encrypt(
-      string,
-      process.env.CRYPTO_SECRET_KEY,
-    ).toString();
+  public generateHash(string: string): string {
+    return cryptojs.AES.encrypt(string, process.env.CRYPTO_SECRET_KEY).toString();
   }
 
   /**
@@ -38,7 +35,7 @@ export class Crypto {
    * @param {string} string
    * @returns {boolean}
    */
-  public static validateHash(hash: string, string: string): boolean {
+  public validateHash(hash: string, string: string): boolean {
     const decrypted: string = Crypto.decrypt(hash);
     return decrypted === string;
   }

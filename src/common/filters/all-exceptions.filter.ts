@@ -35,8 +35,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
     // http exceptions
     if (exception instanceof HttpException) {
       const statusCode: number = exception.getStatus();
-      const exceptionData: HttpI18nMessage =
-        exception.getResponse() as HttpI18nMessage;
+      const exceptionData: HttpI18nMessage = exception.getResponse() as HttpI18nMessage;
 
       const { i18n, message } = exceptionData;
 

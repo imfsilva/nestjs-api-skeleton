@@ -16,10 +16,7 @@ import { ConfigService } from '../shared/services/config.service';
 import { UserEntity } from '../users/entities/user.entity';
 import { UsersService } from '../users/users.service';
 import { Crypto } from '../../common/utilities';
-import {
-  InvalidCredentialsException,
-  UserNotFoundException,
-} from '../../common/exceptions';
+import { InvalidCredentialsException, UserNotFoundException } from '../../common/exceptions';
 import { RECOVER_PASSWORD_TOKEN_EXPIRATION_TIME } from '../../common/constants';
 import { MailerService } from '../shared/services/mailer.service';
 import { InvalidRecoverPasswordToken } from '../../common/exceptions/invalid-recover-password-token';
@@ -33,6 +30,7 @@ export class AuthService {
     private readonly usersService: UsersService,
     private readonly mailerService: MailerService,
     private readonly i18n: I18nService,
+    private readonly crypto: Crypto,
   ) {}
 
   async login(dto: LoginDto): Promise<LoggedInDto> {
@@ -47,10 +45,7 @@ export class AuthService {
       throw new UserNotFoundException(exceptionMessage);
     }
 
-    const isPasswordValid: boolean = Crypto.validateHash(
-      user.password,
-      dto.password,
-    );
+    const isPasswordValid: boolean = this.crypto.validateHash(user.password, dto.password);
 
     if (!isPasswordValid) {
       throw new InvalidCredentialsException();
@@ -80,7 +75,7 @@ export class AuthService {
   async refreshTokens(user: UserEntity, rt: string): Promise<Tokens> {
     if (!user.hashedRt) throw new ForbiddenException('Access denied');
 
-    const rtMatches: boolean = Crypto.validateHash(user.hashedRt, rt);
+    const rtMatches: boolean = this.crypto.validateHash(user.hashedRt, rt);
     if (!rtMatches) throw new ForbiddenException('Access denied');
 
     const tokens: Tokens = await this.getTokens(user.id, user.email);
@@ -90,7 +85,7 @@ export class AuthService {
   }
 
   async updateRtHash(user: UserEntity, rt: string): Promise<void> {
-    const hash = Crypto.generateHash(rt);
+    const hash = this.crypto.generateHash(rt);
     await this.usersService.setHashedRt(user, hash);
   }
 
@@ -111,23 +106,18 @@ export class AuthService {
     return { accessToken: at, refreshToken: rt };
   }
 
-  async forgotPassword(
-    appUrl: string,
-    forgotPasswordDto: ForgotPasswordDto,
-  ): Promise<void> {
-    const exceptionMessage: string = await this.i18n.translate(
-      'exceptions.user_email_not_found',
-      { args: { email: forgotPasswordDto.email } },
-    );
+  async forgotPassword(appUrl: string, forgotPasswordDto: ForgotPasswordDto): Promise<void> {
+    const exceptionMessage: string = await this.i18n.translate('exceptions.user_email_not_found', {
+      args: { email: forgotPasswordDto.email },
+    });
 
     const user: UserEntity | undefined = await this.usersService.findOne({
       email: forgotPasswordDto.email,
     });
     if (!user) throw new UserNotFoundException(exceptionMessage);
 
-    const recoverPasswordToken: string = Crypto.randomHash();
-    const recoverPasswordExpiration: number =
-      RECOVER_PASSWORD_TOKEN_EXPIRATION_TIME;
+    const recoverPasswordToken: string = this.crypto.randomHash();
+    const recoverPasswordExpiration: number = RECOVER_PASSWORD_TOKEN_EXPIRATION_TIME;
 
     await this.usersService.update(user, {
       hashedRt: null,
@@ -138,9 +128,7 @@ export class AuthService {
     await this.mailerService.forgotPassword(user, appUrl);
   }
 
-  async checkRecoverPasswordToken(
-    token: string,
-  ): Promise<RecoverPasswordTokenDto> {
+  async checkRecoverPasswordToken(token: string): Promise<RecoverPasswordTokenDto> {
     const user: UserEntity | undefined = await this.usersService.findOne({
       recoverPasswordToken: token,
     });
@@ -162,7 +150,7 @@ export class AuthService {
       throw new InvalidRecoverPasswordToken();
 
     await this.usersService.update(user, {
-      password: Crypto.generateHash(password),
+      password: this.crypto.generateHash(password),
       recoverPasswordToken: null,
       recoverPasswordExpiration: null,
     });

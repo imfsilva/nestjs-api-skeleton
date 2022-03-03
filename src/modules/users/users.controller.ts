@@ -19,12 +19,6 @@ import { I18nService } from 'nestjs-i18n';
 import { UsersService } from './users.service';
 import { FindAllUserDto, UpdateUserDto, UserDto } from './dtos';
 import { UserEntity } from './entities/user.entity';
-import {
-  ApiFile,
-  ApiPaginatedResponse,
-  GetCurrentUser,
-  HttpCodesResponse,
-} from '../../common/decorators';
 import { Pagination } from '../../common/utilities';
 import { PaginationResponseDto } from '../../common/utilities/pagination/dtos/pagination-response.dto';
 import { AllowedRoles } from '../../common/decorators/allowed-roles.decorator';
@@ -32,22 +26,23 @@ import { RoleType } from '../../common/constants';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ImageFileFilter } from '../../common/filters';
 import { ChangePasswordDto } from './dtos/requests/change-password.dto';
+import {
+  ApiFile,
+  ApiPaginatedResponse,
+  GetCurrentUser,
+  HttpCodesResponse,
+} from '../../common/decorators';
 
 @Controller('users')
 @ApiTags('Users')
 export class UsersController {
-  constructor(
-    private readonly usersService: UsersService,
-    private readonly i18n: I18nService,
-  ) {}
+  constructor(private readonly usersService: UsersService, private readonly i18n: I18nService) {}
 
   @Get()
   @AllowedRoles([RoleType.ADMIN])
   @ApiPaginatedResponse(UserDto)
   @HttpCodesResponse()
-  async findAll(
-    @Query() filters: FindAllUserDto,
-  ): Promise<PaginationResponseDto<UserDto>> {
+  async findAll(@Query() filters: FindAllUserDto): Promise<PaginationResponseDto<UserDto>> {
     const pagination = new Pagination(filters.skip, filters.take);
 
     const users: UserEntity[] = await this.usersService.findAll({
@@ -56,8 +51,7 @@ export class UsersController {
       take: pagination.getTake(),
     });
 
-    const totalRepositoryItems: number =
-      await this.usersService.totalRepositoryItems();
+    const totalRepositoryItems: number = await this.usersService.totalRepositoryItems();
 
     return pagination.paginationResult(
       users.map((user: UserEntity) => user.transform(UserDto, user)),
@@ -67,10 +61,7 @@ export class UsersController {
 
   @Patch('/change-password')
   @HttpCodesResponse()
-  @ApiResponse({
-    status: HttpStatus.OK,
-    description: 'Password changed successfully',
-  })
+  @ApiResponse({ status: HttpStatus.OK, description: 'Password changed successfully' })
   async changePassword(
     @GetCurrentUser() user: UserEntity,
     @Body() changePasswordDto: ChangePasswordDto,
@@ -81,10 +72,7 @@ export class UsersController {
 
   @Post('/image')
   @HttpCode(HttpStatus.OK)
-  @ApiResponse({
-    status: HttpStatus.OK,
-    description: 'Image uploaded successfully',
-  })
+  @ApiResponse({ status: HttpStatus.OK, description: 'Image uploaded successfully' })
   @HttpCodesResponse()
   @ApiFile('image')
   @UseInterceptors(FileInterceptor('image', { fileFilter: ImageFileFilter }))
@@ -98,10 +86,7 @@ export class UsersController {
 
   @Delete('/image')
   @HttpCode(HttpStatus.OK)
-  @ApiResponse({
-    status: HttpStatus.OK,
-    description: 'Image deleted successfully',
-  })
+  @ApiResponse({ status: HttpStatus.OK, description: 'Image deleted successfully' })
   @HttpCodesResponse()
   async deleteFile(@GetCurrentUser() user: UserEntity): Promise<string> {
     await this.usersService.deleteImage(user.id, user.image);
@@ -114,8 +99,8 @@ export class UsersController {
   async findOne(
     @Param('uuid', new ParseUUIDPipe())
     uuid: string,
-  ) {
-    const user: UserEntity = await this.usersService.findOne({ id: uuid });
+  ): Promise<UserDto> {
+    const user: UserEntity = await this.usersService.findOne({ id: uuid }, true);
     return user.transform(UserDto, user);
   }
 
@@ -125,23 +110,15 @@ export class UsersController {
     @Param('uuid', new ParseUUIDPipe()) uuid: string,
     @Body() updateUserDto: UpdateUserDto,
   ): Promise<UserDto> {
-    const user: UserEntity = await this.usersService.updateWithGuard(
-      uuid,
-      updateUserDto,
-    );
+    const user: UserEntity = await this.usersService.updateWithGuard(uuid, updateUserDto);
     return user.transform(UserDto, user);
   }
 
   @Delete(':uuid')
   @AllowedRoles([RoleType.ADMIN])
   @HttpCodesResponse()
-  @ApiResponse({
-    status: HttpStatus.OK,
-    description: 'User deleted successfully',
-  })
-  async delete(
-    @Param('uuid', new ParseUUIDPipe()) uuid: string,
-  ): Promise<string> {
+  @ApiResponse({ status: HttpStatus.OK, description: 'User deleted successfully' })
+  async delete(@Param('uuid', new ParseUUIDPipe()) uuid: string): Promise<string> {
     await this.usersService.remove(uuid);
     return this.i18n.translate('user.user_deleted', { args: { uuid } });
   }

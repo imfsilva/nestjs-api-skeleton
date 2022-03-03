@@ -1,9 +1,4 @@
-import {
-  Column,
-  CreateDateColumn,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
-} from 'typeorm';
+import { Column, CreateDateColumn, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 import { ClassConstructor, plainToInstance } from 'class-transformer';
 
 export abstract class AbstractEntity {

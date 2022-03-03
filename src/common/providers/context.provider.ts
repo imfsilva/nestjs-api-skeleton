@@ -19,11 +19,11 @@ export class ContextProvider {
     return `${ContextProvider.nameSpace}.${key}`;
   }
 
-  static setAuthUser(user: UserEntity): void {
+  public setAuthUser(user: UserEntity): void {
     ContextProvider.set(ContextProvider.authUserKey, user);
   }
 
-  static getAuthUser(): UserEntity | undefined {
+  public getAuthUser(): UserEntity | undefined {
     return ContextProvider.get<UserEntity>(ContextProvider.authUserKey);
   }
 }

@@ -10,11 +10,7 @@ import { WinstonModule } from 'nest-winston';
 import * as winston from 'winston';
 import { NestMinioModule } from 'nestjs-minio';
 import * as path from 'path';
-import {
-  AcceptLanguageResolver,
-  I18nJsonParser,
-  I18nModule,
-} from 'nestjs-i18n';
+import { AcceptLanguageResolver, I18nJsonParser, I18nModule } from 'nestjs-i18n';
 
 import { AllExceptionsFilter } from './common/filters';
 import { ConfigService } from './modules/shared/services/config.service';
@@ -38,15 +34,12 @@ import { AppService } from './app.service';
           dirname: path.join(__dirname, '..', 'logs'),
           filename: 'errors.log',
           level: 'error',
-          format: winston.format.combine(
-            winston.format.timestamp(),
-            winston.format.ms(),
-          ),
+          format: winston.format.combine(winston.format.timestamp(), winston.format.ms()),
         }),
       ],
     }),
     ServeStaticModule.forRoot({
-      rootPath: path.join(__dirname, '/public'),
+      rootPath: path.join(__dirname, '/assets/client'),
       serveRoot: '/public',
     }),
     ThrottlerModule.forRootAsync({
@@ -90,7 +83,7 @@ import { AppService } from './app.service';
           from: config.mailerConfig.outgoingEmail,
         },
         template: {
-          dir: path.join(__dirname, '/templates'),
+          dir: path.join(__dirname, '/assets/templates'),
           adapter: new HandlebarsAdapter(),
           options: {
             strict: true,
@@ -104,7 +97,7 @@ import { AppService } from './app.service';
       useFactory: (configService: ConfigService) => ({
         fallbackLanguage: configService.fallbackLanguage,
         parserOptions: {
-          path: path.join(__dirname, '/i18n'),
+          path: path.join(__dirname, '/assets/i18n'),
           watch: configService.isDevelopment,
         },
       }),

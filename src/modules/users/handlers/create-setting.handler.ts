@@ -6,10 +6,7 @@ import { UserSettingsEntity } from '../entities/user-settings.entity';
 import { UsersSettingsRepository } from '../users-settings.repository';
 
 export class CreateSettingCommand implements ICommand {
-  constructor(
-    public readonly userId: string,
-    public readonly createSettingDto: CreateSettingDto,
-  ) {}
+  constructor(public readonly userId: string, public readonly createSettingDto: CreateSettingDto) {}
 }
 
 @CommandHandler(CreateSettingCommand)
@@ -18,7 +15,7 @@ export class CreateSettingsHandler
 {
   constructor(private userSettingsRepository: UsersSettingsRepository) {}
 
-  async execute(command: CreateSettingCommand) {
+  async execute(command: CreateSettingCommand): Promise<UserSettingsEntity> {
     const { userId, createSettingDto } = command;
 
     const userSettingsEntity: UserSettingsEntity =

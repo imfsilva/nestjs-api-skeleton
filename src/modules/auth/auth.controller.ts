@@ -17,9 +17,9 @@ import { Request } from 'express';
 import { AuthService } from './auth.service';
 import { GetCurrentUser, Public } from '../../common/decorators';
 import { RtGuard } from './guards';
+import { CommonUtilities } from '../../common/utilities';
 import { UserEntity } from '../users/entities/user.entity';
 import { UserDto } from '../users/dtos';
-import { appUrl } from '../../common/utilities';
 import { RecoverPasswordTokenDto } from './dtos/responses/recover-password-token.dto';
 import {
   LoggedInDto,
@@ -37,6 +37,7 @@ export class AuthController {
   constructor(
     private authService: AuthService,
     private readonly i18n: I18nService,
+    private readonly commonUtilities: CommonUtilities,
   ) {}
 
   @Public()
@@ -54,10 +55,7 @@ export class AuthController {
 
   @Post('logout')
   @HttpCode(HttpStatus.OK)
-  @ApiResponse({
-    status: HttpStatus.OK,
-    description: 'Logged out',
-  })
+  @ApiResponse({ status: HttpStatus.OK, description: 'Logged out' })
   async logout(@GetCurrentUser() user: UserEntity): Promise<string> {
     await this.authService.logout(user);
     return this.i18n.translate('auth.logged_out');
@@ -76,24 +74,18 @@ export class AuthController {
     // refresh token is injected in RtGuard
     @GetCurrentUser() currentUser: { user: UserEntity; refreshToken: string },
   ): Promise<RefreshTokenDto> {
-    return this.authService.refreshTokens(
-      currentUser.user,
-      currentUser.refreshToken,
-    );
+    return this.authService.refreshTokens(currentUser.user, currentUser.refreshToken);
   }
 
   @Public()
   @Post('forgot-password')
   @HttpCode(HttpStatus.OK)
-  @ApiResponse({
-    status: HttpStatus.OK,
-    description: 'Forgot password email sent',
-  })
+  @ApiResponse({ status: HttpStatus.OK, description: 'Forgot password email sent' })
   async forgotPassword(
     @Req() req: Request,
     @Body() forgotPasswordDto: ForgotPasswordDto,
   ): Promise<string> {
-    await this.authService.forgotPassword(appUrl(req), forgotPasswordDto);
+    await this.authService.forgotPassword(this.commonUtilities.appUrl(req), forgotPasswordDto);
     return this.i18n.translate('auth.forgot_password_email_sent', {
       args: { email: forgotPasswordDto.email },
     });
@@ -101,9 +93,7 @@ export class AuthController {
 
   @Public()
   @Get('/check-recover-password-token/:token')
-  async checkRecoverPasswordToken(
-    @Param('token') token: string,
-  ): Promise<RecoverPasswordTokenDto> {
+  async checkRecoverPasswordToken(@Param('token') token: string): Promise<RecoverPasswordTokenDto> {
     return this.authService.checkRecoverPasswordToken(token);
   }
 
@@ -111,9 +101,7 @@ export class AuthController {
   @Patch('/recover-password')
   @HttpCode(HttpStatus.OK)
   @ApiResponse({ status: HttpStatus.OK, description: 'Password recovered' })
-  async recoverPassword(
-    @Body() recoverPasswordDto: RecoverPasswordDto,
-  ): Promise<string> {
+  async recoverPassword(@Body() recoverPasswordDto: RecoverPasswordDto): Promise<string> {
     await this.authService.recoverPassword(recoverPasswordDto);
     return this.i18n.translate('auth.password_recovered');
   }

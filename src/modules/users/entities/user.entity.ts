@@ -32,10 +32,7 @@ export class UserEntity extends AbstractEntity {
   @Column({ default: null, type: 'varchar' })
   hashedRt: string | null;
 
-  @OneToOne(
-    () => UserSettingsEntity,
-    (settings: UserSettingsEntity) => settings.user,
-  )
+  @OneToOne(() => UserSettingsEntity, (settings: UserSettingsEntity) => settings.user)
   settings: UserSettingsEntity;
 
   @OneToOne(() => UserImageEntity, (image: UserImageEntity) => image.user, {
@@ -49,6 +46,6 @@ export class UserEntity extends AbstractEntity {
 
   @BeforeInsert()
   async hashPassword() {
-    this.password = Crypto.generateHash(this.password);
+    this.password = new Crypto().generateHash(this.password);
   }
 }

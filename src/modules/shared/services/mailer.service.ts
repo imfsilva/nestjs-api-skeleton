@@ -11,10 +11,9 @@ export class MailerService {
   ) {}
 
   async forgotPassword(user: UserEntity, appUrl: string): Promise<void> {
-    const subject: string = await this.i18n.translate(
-      'mailer.forgot_password_subject',
-      { lang: user.settings.language },
-    );
+    const subject: string = await this.i18n.translate('mailer.forgot_password_subject', {
+      lang: user.settings.language,
+    });
 
     const changePasswordButtonHref = `${appUrl}/public/recover-password/${user.settings.language}.html?token=${user.recoverPasswordToken}`;
     const logoUrl = `${appUrl}/public/images/logo.png`;

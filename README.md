@@ -1,7 +1,7 @@
 <h1 align='center'>[PROJECT'S NAME]</h1>
 
 <p align='center'>
-  <img alt="logo" src="src/public/images/logo.svg" width="300">
+  <img alt="logo" src="src/assets/client/images/logo.svg" width="300">
 </p>
 
 > REST API developed with NestJS.
@@ -87,7 +87,7 @@ $ yarn start:prod
 
 ## Seeds
 
-To insert initial data in our database we execute one of the following commands depending on the environment:
+To seed the database you can use one of the following commands depending on the environment.
 
 ```shell
 $ make development-seed
@@ -97,12 +97,22 @@ $ yarn seed:run
 
 ## Tests
 
-Create `.env.test` file in the root of the project.
+Create `.env.test` file in the root of the project. 
+
+Variables to be replaced from the example:
+
+```dotenv
+NODE_ENV=test
+S3_URL=localhost
+DB_URL=postgresql://root:root@localhost:5432/skeleton_test
+```
 
 ```shell
-$ yarn test
-$ yarn test:e2e
+$ yarn test // unit tests
+$ yarn test:e2e // end to end tests
 ```
+
+⚠️ To run e2e tests, docker services `db` and `minio` must be up.
 
 ## Migrations
 

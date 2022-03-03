@@ -4,13 +4,13 @@ import { middleware as expressCtx } from 'express-ctx';
 import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
 
 import { TimeoutInterceptor } from '../modules/core/interceptors';
-import { setupSwagger } from './setup-swagger';
+import { swagger } from './swagger';
 
 export function registerGlobals(app: INestApplication) {
   app.use(compression());
 
   // swagger config
-  setupSwagger(app);
+  swagger(app);
 
   // interceptors
   app.useGlobalInterceptors(new TimeoutInterceptor());

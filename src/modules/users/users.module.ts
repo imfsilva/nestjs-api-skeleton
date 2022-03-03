@@ -11,6 +11,8 @@ import { CreateSettingsHandler } from './handlers/create-setting.handler';
 import { S3Service } from '../shared/services/s3.service';
 import { UsersImageRepository } from './users-image.repository';
 import { ConfigService } from '../shared/services/config.service';
+import { Crypto } from '../../common/utilities';
+import { ContextProvider } from '../../common/providers';
 
 export const handlers = [CreateSettingsHandler];
 
@@ -21,14 +23,10 @@ export const handlers = [CreateSettingsHandler];
       inject: [ConfigService],
       useFactory: (config: ConfigService) => config.multerConfig,
     }),
-    TypeOrmModule.forFeature([
-      UsersRepository,
-      UsersSettingsRepository,
-      UsersImageRepository,
-    ]),
+    TypeOrmModule.forFeature([UsersRepository, UsersSettingsRepository, UsersImageRepository]),
   ],
   controllers: [UsersController],
   exports: [UsersService],
-  providers: [UsersService, S3Service, ...handlers],
+  providers: [UsersService, S3Service, Crypto, ContextProvider, ...handlers],
 })
 export class UsersModule {}

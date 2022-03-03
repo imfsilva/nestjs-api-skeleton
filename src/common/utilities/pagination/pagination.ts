@@ -1,6 +1,5 @@
 import { PaginationResponseDto } from './dtos/pagination-response.dto';
-
-export type PaginationResponse<T> = PaginationResponseDto<T>;
+import { plainToInstance } from 'class-transformer';
 
 export class Pagination {
   private readonly skip: number;
@@ -11,19 +10,16 @@ export class Pagination {
     this.take = take;
   }
 
-  public paginationResult<T>(
-    items: T[],
-    totalItems: number,
-  ): PaginationResponse<T> {
+  public paginationResult<T>(items: T[], totalItems: number): PaginationResponseDto<T> {
     const size: number = this.take !== 0 ? this.take : totalItems;
 
-    return {
+    return plainToInstance(PaginationResponseDto, {
       items,
       itemsCount: items.length,
       totalItems,
       maxPages: size === 0 ? totalItems : Math.ceil(totalItems / size),
       currentPage: this.skip,
-    };
+    });
   }
 
   public getSkip(): number {

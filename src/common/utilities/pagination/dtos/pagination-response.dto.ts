@@ -1,19 +1,24 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Type } from 'class-transformer';
+import { Exclude, Expose } from 'class-transformer';
 
+@Exclude()
 export class PaginationResponseDto<T> {
-  @Type()
+  @Expose()
   readonly items: T[];
 
   @ApiProperty()
+  @Expose()
   readonly itemsCount: number;
 
   @ApiProperty()
+  @Expose()
   readonly totalItems: number;
 
   @ApiProperty()
+  @Expose()
   readonly currentPage: number;
 
   @ApiProperty()
+  @Expose()
   readonly maxPages: number;
 }

@@ -14,11 +14,12 @@ import { ContextProvider } from '../../../common/providers';
  * This method get the current logged-in user from the express context and compare his ID with the {id}
  * received as param.
  *
+ * @param contextProvider {ContextProvider} Express context provider
  * @param id {string} User ID from relation entity
  * @return boolean
  */
-export function selfGuard(id: string): boolean {
-  const loggedInUser: UserEntity = ContextProvider.getAuthUser();
+export function selfGuard(contextProvider: ContextProvider, id: string): boolean {
+  const loggedInUser: UserEntity = contextProvider.getAuthUser();
 
   if (loggedInUser.role === RoleType.ADMIN) return true;
   if (loggedInUser.id !== id) throw new ForbiddenException();

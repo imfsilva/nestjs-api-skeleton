@@ -10,7 +10,11 @@ import { ContextProvider } from '../../../common/providers';
 
 @Injectable()
 export class AtStrategy extends PassportStrategy(Strategy, 'jwt') {
-  constructor(config: ConfigService, private usersService: UsersService) {
+  constructor(
+    private config: ConfigService,
+    private usersService: UsersService,
+    private contextProvider: ContextProvider,
+  ) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       secretOrKey: config.authConfig.atSecret,
@@ -25,7 +29,7 @@ export class AtStrategy extends PassportStrategy(Strategy, 'jwt') {
     });
     if (!user) throw new UnauthorizedException();
 
-    ContextProvider.setAuthUser(user);
+    this.contextProvider.setAuthUser(user);
 
     return user;
   }
