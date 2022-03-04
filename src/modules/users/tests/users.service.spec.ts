@@ -179,14 +179,14 @@ describe('UsersService', () => {
       jest.spyOn(userRepository, 'delete').mockResolvedValue({} as DeleteResult);
 
       const result = await service.remove('userId');
-      await expect(result).toBeTruthy();
+      expect(result).toBeTruthy();
     });
   });
 
   describe('createSettings', () => {
     it('should create user settings', async () => {
       const result = await service.createSettings('userId', new CreateSettingDto());
-      await expect(result).toBeTruthy();
+      expect(result).toBeTruthy();
       expect(result).toBeInstanceOf(UserSettingsEntity);
     });
   });

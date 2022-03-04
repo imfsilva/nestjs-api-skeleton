@@ -17,7 +17,7 @@ import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { I18nService } from 'nestjs-i18n';
 
 import { UsersService } from './users.service';
-import { FindAllUserDto, UpdateUserDto, UserDto } from './dtos';
+import { FindAllUserDto, UpdateUserDto, UpdateUserStatusDto, UserDto } from './dtos';
 import { UserEntity } from './entities/user.entity';
 import { Pagination } from '../../common/utilities';
 import { PaginationResponseDto } from '../../common/utilities/pagination/dtos/pagination-response.dto';
@@ -111,6 +111,18 @@ export class UsersController {
     @Body() updateUserDto: UpdateUserDto,
   ): Promise<UserDto> {
     const user: UserEntity = await this.usersService.updateWithGuard(uuid, updateUserDto);
+    return user.transform(UserDto, user);
+  }
+
+  @Patch('/:uuid/status')
+  @AllowedRoles([RoleType.ADMIN])
+  @HttpCodesResponse()
+  @ApiResponse({ status: HttpStatus.OK, description: 'Update user softDelete status' })
+  async updateUserStatus(
+    @Param('uuid', new ParseUUIDPipe()) uuid: string,
+    @Body() updateUserStatusDto: UpdateUserStatusDto,
+  ): Promise<UserDto> {
+    const user: UserEntity = await this.usersService.updateWithGuard(uuid, updateUserStatusDto);
     return user.transform(UserDto, user);
   }
 

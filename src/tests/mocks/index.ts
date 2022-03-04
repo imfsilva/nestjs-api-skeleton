@@ -1,3 +1,5 @@
+export * from './express';
+
 // common
 export * from './modules/common/context-provider.mock';
 export * from './modules/common/i18n-service.mock';
@@ -7,9 +9,9 @@ export * from './modules/common/query-builder.mock';
 // shared
 export * from './modules/shared/s3-service.mock';
 
-// user
-export * from './modules/user/create-setting-handler.mock';
-export * from './modules/user/users-service.mock';
+// users
+export * from './modules/users/create-setting-handler.mock';
+export * from './modules/users/users-service.mock';
 
 // auth
 export * from './modules/auth/auth.service.mock';

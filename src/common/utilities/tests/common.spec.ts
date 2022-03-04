@@ -1,7 +1,7 @@
 import { Test } from '@nestjs/testing';
-import { Request } from 'express';
 
 import { CommonUtilities } from '../common';
+import { ExpressMock } from '../../../tests/mocks';
 
 describe('Common', () => {
   let commonUtilities: CommonUtilities;
@@ -19,12 +19,13 @@ describe('Common', () => {
   });
 
   it('should return app url', () => {
-    const result = commonUtilities.appUrl({
-      // mocked method
-      get(name: 'set-cookie'): string[] | undefined {
-        return [''];
-      },
-    } as Request);
+    const result = CommonUtilities.appUrl(ExpressMock);
     expect(result).toBeTruthy();
+  });
+
+  it('should return a capitalized string', () => {
+    const result = CommonUtilities.capitalize('random string');
+    expect(result).toBeTruthy();
+    expect(result).toBe('Random string');
   });
 });

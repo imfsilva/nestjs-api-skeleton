@@ -21,7 +21,6 @@ export function registerGlobals(app: INestApplication) {
       transform: true,
       whitelist: true,
       forbidNonWhitelisted: true,
-      skipUndefinedProperties: true,
     }),
   );
 

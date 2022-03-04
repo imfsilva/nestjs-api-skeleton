@@ -2,13 +2,13 @@ import { InstanceToken } from '@nestjs/core/injector/module';
 import { Test } from '@nestjs/testing';
 import { I18nService } from 'nestjs-i18n';
 import { MockFunctionMetadata, ModuleMocker } from 'jest-mock';
-import { Request } from 'express';
 
 import { AuthServiceMock, I18nServiceMock } from '../../../tests/mocks';
 import { AuthController } from '../auth.controller';
 import { AuthService } from '../auth.service';
 import { ForgotPasswordDto, LoginDto, RecoverPasswordDto, RegisterDto } from '../dtos';
 import { UserEntity } from '../../users/entities/user.entity';
+import { ExpressMock } from '../../../tests/mocks';
 
 const moduleMocker = new ModuleMocker(global);
 
@@ -77,7 +77,7 @@ describe('AuthController', () => {
 
   describe('forgotPassword', () => {
     it('should return a confirmation message', async () => {
-      const result = await controller.forgotPassword({} as Request, new ForgotPasswordDto());
+      const result = await controller.forgotPassword(ExpressMock, new ForgotPasswordDto());
       expect(result).toBeTruthy();
       expect(result).toBe('i18nMessage');
     });

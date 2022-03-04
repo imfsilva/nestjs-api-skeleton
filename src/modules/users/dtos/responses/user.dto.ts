@@ -27,4 +27,7 @@ export class UserDto {
   @Expose()
   @Type(() => SettingsDto)
   readonly settings: SettingsDto;
+
+  @Expose()
+  readonly softDelete: boolean;
 }

@@ -34,11 +34,7 @@ import {
 @Controller('auth')
 @ApiTags('Auth')
 export class AuthController {
-  constructor(
-    private authService: AuthService,
-    private readonly i18n: I18nService,
-    private readonly commonUtilities: CommonUtilities,
-  ) {}
+  constructor(private authService: AuthService, private readonly i18n: I18nService) {}
 
   @Public()
   @Post('login')
@@ -85,7 +81,7 @@ export class AuthController {
     @Req() req: Request,
     @Body() forgotPasswordDto: ForgotPasswordDto,
   ): Promise<string> {
-    await this.authService.forgotPassword(this.commonUtilities.appUrl(req), forgotPasswordDto);
+    await this.authService.forgotPassword(CommonUtilities.appUrl(req), forgotPasswordDto);
     return this.i18n.translate('auth.forgot_password_email_sent', {
       args: { email: forgotPasswordDto.email },
     });

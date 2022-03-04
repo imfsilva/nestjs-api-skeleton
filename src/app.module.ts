@@ -83,7 +83,7 @@ import { AppService } from './app.service';
           from: config.mailerConfig.outgoingEmail,
         },
         template: {
-          dir: path.join(__dirname, '/assets/templates'),
+          dir: path.join(__dirname, '/assets/mailer-templates'),
           adapter: new HandlebarsAdapter(),
           options: {
             strict: true,

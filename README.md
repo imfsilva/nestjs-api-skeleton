@@ -125,3 +125,7 @@ $ yarn migration:create <migration name>
 ```
 
 The migration file will be created under `src/database/migrations`.
+
+## Extra
+
+ In the root of the project you can find a Postman project with all the available endpoints.

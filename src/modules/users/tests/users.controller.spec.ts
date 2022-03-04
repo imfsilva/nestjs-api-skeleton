@@ -69,6 +69,14 @@ describe('UsersController', () => {
     });
   });
 
+  describe('update status', () => {
+    it('should return an updated user', async () => {
+      const result = await controller.updateUserStatus('userId', { softDelete: true });
+      expect(result).toBeTruthy();
+      expect(result).toBeInstanceOf(UserDto);
+    });
+  });
+
   describe('delete', () => {
     it('should return a confirmation message', async () => {
       const result = await controller.delete('userId');

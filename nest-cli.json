@@ -4,6 +4,6 @@
   "sourceRoot": "src",
   "compilerOptions": {
     "plugins": ["@nestjs/swagger/plugin"],
-    "assets": ["assets/**/*", "templates/**/*", "static/**/*"]
+    "assets": ["assets/**/*"]
   }
 }

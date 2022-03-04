@@ -27,7 +27,7 @@ export class AtStrategy extends PassportStrategy(Strategy, 'jwt') {
     const user: UserEntity | undefined = await this.usersService.findOne({
       id: userId,
     });
-    if (!user) throw new UnauthorizedException();
+    if (!user || user.softDelete) throw new UnauthorizedException();
 
     this.contextProvider.setAuthUser(user);
 

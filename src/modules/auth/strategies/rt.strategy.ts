@@ -31,7 +31,7 @@ export class RtStrategy extends PassportStrategy(Strategy, 'jwt-refresh') {
     const user: UserEntity | undefined = await this.usersService.findOne({
       id: userId,
     });
-    if (!user) throw new UnauthorizedException();
+    if (!user || user.softDelete) throw new UnauthorizedException();
 
     return { user, refreshToken };
   }

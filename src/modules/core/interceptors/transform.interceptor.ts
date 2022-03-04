@@ -3,6 +3,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { GeneratorProvider } from '../../../common/providers';
+import { CommonUtilities } from '../../../common/utilities';
 
 export interface ResponseDto<T> {
   requestId: string;
@@ -30,7 +31,8 @@ export function transformToResponseDto<T>(payload: {
   }
 
   if (typeof message === 'string') response.message = message;
-  else response.errors = message; // errors from validation pipe
+  else if (Array.isArray(message))
+    response.errors = message.map((error: string) => CommonUtilities.capitalize(error)); // errors from validation pipe
 
   return response;
 }

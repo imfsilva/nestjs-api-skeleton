@@ -293,6 +293,20 @@ describe('App (e2e)', () => {
       });
     });
 
+    describe('PATCH /users/:id/status', () => {
+      it('should update a user status by ID', () => {
+        return request(app.getHttpServer())
+          .patch(`/users/${USER_ROLE_USER.user.id}/status`)
+          .auth(ADMIN_ROLE_USER.accessToken, { type: 'bearer' })
+          .send({ softDelete: true })
+          .expect(HttpStatus.OK)
+          .expect(({ body }: { body: ResponseDto<UserDto> }) => {
+            const { data } = body;
+            testUserDto(data);
+          });
+      });
+    });
+
     describe('DELETE /users/:id', () => {
       it('should delete a user by ID', () => {
         // register a new user

@@ -108,7 +108,7 @@ export class UsersService {
     return await this.usersRepository.save(this.usersRepository.merge(user, updateData));
   }
 
-  async updateWithGuard(uuid: string, dto: Partial<UserEntity>): Promise<UserEntity> {
+  async updateWithGuard(uuid: string, dto: DeepPartial<UserEntity>): Promise<UserEntity> {
     const user: UserEntity = await this.findOne({ id: uuid }, true);
 
     selfGuard(this.contextProvider, user.id);
