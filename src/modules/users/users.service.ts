@@ -26,6 +26,8 @@ import { ContextProvider } from '../../common/providers';
 
 @Injectable()
 export class UsersService {
+  private readonly USER_S3_MODULE_NAME = 'users';
+
   constructor(
     private readonly usersRepository: UsersRepository,
     private readonly usersSettingsRepository: UsersSettingsRepository,
@@ -152,7 +154,7 @@ export class UsersService {
     if (user.image) {
       await this.deleteImage(user.id, user.image);
       await this.s3Service.deleteFile({
-        moduleName: 'users',
+        moduleName: this.USER_S3_MODULE_NAME,
         proprietaryId: user.id,
         fileId: user.image.id,
         fileExtension: user.image.extension,
@@ -170,7 +172,7 @@ export class UsersService {
 
     // upload image to S3
     await this.s3Service.uploadSingleFile({
-      moduleName: 'users',
+      moduleName: this.USER_S3_MODULE_NAME,
       proprietaryId: user.id,
       fileId: image.id,
       file: file,
@@ -181,7 +183,7 @@ export class UsersService {
     if (!image) throw new NotFoundException('User has no assigned image');
     await this.usersImageRepository.delete({ id: image.id });
     await this.s3Service.deleteFile({
-      moduleName: 'users',
+      moduleName: this.USER_S3_MODULE_NAME,
       proprietaryId: userId,
       fileId: image.id,
       fileExtension: image.extension,

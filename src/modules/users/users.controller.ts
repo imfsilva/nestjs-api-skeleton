@@ -13,7 +13,7 @@ import {
   UploadedFile,
   UseInterceptors,
 } from '@nestjs/common';
-import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { I18nService } from 'nestjs-i18n';
 
 import { UsersService } from './users.service';
@@ -32,6 +32,7 @@ import {
   GetCurrentUser,
   HttpCodesResponse,
 } from '../../common/decorators';
+import { BEARER_AUTH_NAME } from '../../config/swagger';
 
 @Controller('users')
 @ApiTags('Users')
@@ -40,6 +41,7 @@ export class UsersController {
 
   @Get()
   @AllowedRoles([RoleType.ADMIN])
+  @ApiBearerAuth(BEARER_AUTH_NAME)
   @ApiPaginatedResponse(UserDto)
   @HttpCodesResponse()
   async findAll(@Query() filters: FindAllUserDto): Promise<PaginationResponseDto<UserDto>> {
@@ -60,6 +62,7 @@ export class UsersController {
   }
 
   @Patch('/change-password')
+  @ApiBearerAuth(BEARER_AUTH_NAME)
   @HttpCodesResponse()
   @ApiResponse({ status: HttpStatus.OK, description: 'Password changed successfully' })
   async changePassword(
@@ -71,6 +74,7 @@ export class UsersController {
   }
 
   @Post('/image')
+  @ApiBearerAuth(BEARER_AUTH_NAME)
   @HttpCode(HttpStatus.OK)
   @ApiResponse({ status: HttpStatus.OK, description: 'Image uploaded successfully' })
   @HttpCodesResponse()
@@ -85,6 +89,7 @@ export class UsersController {
   }
 
   @Delete('/image')
+  @ApiBearerAuth(BEARER_AUTH_NAME)
   @HttpCode(HttpStatus.OK)
   @ApiResponse({ status: HttpStatus.OK, description: 'Image deleted successfully' })
   @HttpCodesResponse()
@@ -95,6 +100,7 @@ export class UsersController {
 
   @Get(':uuid')
   @AllowedRoles([RoleType.ADMIN])
+  @ApiBearerAuth(BEARER_AUTH_NAME)
   @HttpCodesResponse()
   async findOne(
     @Param('uuid', new ParseUUIDPipe())
@@ -105,6 +111,7 @@ export class UsersController {
   }
 
   @Patch(':uuid')
+  @ApiBearerAuth(BEARER_AUTH_NAME)
   @HttpCodesResponse()
   async update(
     @Param('uuid', new ParseUUIDPipe()) uuid: string,
@@ -116,6 +123,7 @@ export class UsersController {
 
   @Patch('/:uuid/status')
   @AllowedRoles([RoleType.ADMIN])
+  @ApiBearerAuth(BEARER_AUTH_NAME)
   @HttpCodesResponse()
   @ApiResponse({ status: HttpStatus.OK, description: 'Update user softDelete status' })
   async updateUserStatus(
@@ -128,6 +136,7 @@ export class UsersController {
 
   @Delete(':uuid')
   @AllowedRoles([RoleType.ADMIN])
+  @ApiBearerAuth(BEARER_AUTH_NAME)
   @HttpCodesResponse()
   @ApiResponse({ status: HttpStatus.OK, description: 'User deleted successfully' })
   async delete(@Param('uuid', new ParseUUIDPipe()) uuid: string): Promise<string> {

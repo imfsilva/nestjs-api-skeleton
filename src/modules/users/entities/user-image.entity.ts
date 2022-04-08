@@ -3,7 +3,7 @@ import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from 'ty
 import { UserEntity } from './user.entity';
 import { S3Service } from '../../shared/services/s3.service';
 
-@Entity('users_images')
+@Entity({ name: 'users_images' })
 export class UserImageEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;

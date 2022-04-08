@@ -10,7 +10,7 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { I18nService } from 'nestjs-i18n';
 import { Request } from 'express';
 
@@ -30,6 +30,7 @@ import {
   RecoverPasswordDto,
   RefreshTokenDto,
 } from './dtos';
+import { BEARER_AUTH_NAME } from '../../config/swagger';
 
 @Controller('auth')
 @ApiTags('Auth')
@@ -51,6 +52,7 @@ export class AuthController {
 
   @Post('logout')
   @HttpCode(HttpStatus.OK)
+  @ApiBearerAuth(BEARER_AUTH_NAME)
   @ApiResponse({ status: HttpStatus.OK, description: 'Logged out' })
   async logout(@GetCurrentUser() user: UserEntity): Promise<string> {
     await this.authService.logout(user);
@@ -58,6 +60,7 @@ export class AuthController {
   }
 
   @Get('me')
+  @ApiBearerAuth(BEARER_AUTH_NAME)
   async me(@GetCurrentUser() user: UserEntity): Promise<UserDto> {
     return user.transform(UserDto, user);
   }

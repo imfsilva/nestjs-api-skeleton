@@ -3,12 +3,21 @@ import { DocumentBuilder, OpenAPIObject, SwaggerModule } from '@nestjs/swagger';
 
 import { PaginationResponseDto } from '../common/utilities/pagination/dtos/pagination-response.dto';
 
-export function swagger(app: INestApplication): void {
-  const documentBuilder = new DocumentBuilder().setTitle('API').addBearerAuth();
+export const BEARER_AUTH_NAME = 'JWT';
 
-  if (process.env.API_VERSION) {
-    documentBuilder.setVersion(process.env.API_VERSION);
-  }
+export function swagger(app: INestApplication): void {
+  const documentBuilder = new DocumentBuilder().setTitle('API').addBearerAuth(
+    {
+      name: 'Authorization',
+      bearerFormat: 'Bearer',
+      scheme: 'Bearer',
+      type: 'http',
+      in: 'Header',
+    },
+    BEARER_AUTH_NAME,
+  );
+
+  if (process.env.API_VERSION) documentBuilder.setVersion(process.env.API_VERSION);
 
   const document: OpenAPIObject = SwaggerModule.createDocument(app, documentBuilder.build(), {
     extraModels: [PaginationResponseDto],
