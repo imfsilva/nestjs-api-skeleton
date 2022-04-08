@@ -46,10 +46,7 @@ export class AuthService {
     }
 
     const isPasswordValid: boolean = this.crypto.validateHash(user.password, dto.password);
-
-    if (!isPasswordValid) {
-      throw new InvalidCredentialsException();
-    }
+    if (!isPasswordValid) throw new InvalidCredentialsException();
 
     const tokens: Tokens = await this.getTokens(user.id, user.email);
     await this.updateRtHash(user, tokens.refreshToken);

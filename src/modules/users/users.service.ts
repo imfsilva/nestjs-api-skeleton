@@ -96,9 +96,7 @@ export class UsersService {
 
     user.settings = await this.createSettings(
       user.id,
-      plainToInstance(CreateSettingDto, {
-        language: Languages.en,
-      }),
+      plainToInstance(CreateSettingDto, { language: Languages.en }),
     );
 
     return user;
@@ -117,9 +115,8 @@ export class UsersService {
   }
 
   async changePassword(user: UserEntity, changePasswordDto: ChangePasswordDto): Promise<void> {
-    if (!this.crypto.validateHash(user.password, changePasswordDto.currentPassword)) {
+    if (!this.crypto.validateHash(user.password, changePasswordDto.currentPassword))
       throw new InvalidCredentialsException();
-    }
 
     selfGuard(this.contextProvider, user.id);
 

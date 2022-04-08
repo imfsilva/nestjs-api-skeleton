@@ -8,10 +8,10 @@ import { UsersService } from '../users.service';
 import { UserEntity } from '../entities/user.entity';
 import { UpdateUserDto, UserDto } from '../dtos';
 import { ChangePasswordDto } from '../dtos/requests/change-password.dto';
-import { testPaginationDto } from '../../../../test/dtos';
 import { MIN_SKIP, MIN_TAKE } from '../../../common/constants';
 import { PaginationResponseDto } from '../../../common/utilities/pagination/dtos/pagination-response.dto';
 import { I18nServiceMock, MulterFileMock, UsersServiceMock } from '../../../tests/mocks';
+import { testPaginationDto } from '../../../../tests/dtos';
 
 const moduleMocker = new ModuleMocker(global);
 

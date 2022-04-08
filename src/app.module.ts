@@ -7,10 +7,10 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 import { WinstonModule } from 'nest-winston';
-import * as winston from 'winston';
 import { NestMinioModule } from 'nestjs-minio';
-import * as path from 'path';
 import { AcceptLanguageResolver, I18nJsonParser, I18nModule } from 'nestjs-i18n';
+import * as winston from 'winston';
+import * as path from 'path';
 
 import { AllExceptionsFilter } from './common/filters';
 import { ConfigService } from './modules/shared/services/config.service';
@@ -60,7 +60,7 @@ import { AppService } from './app.service';
       inject: [ConfigService],
       useFactory: (config: ConfigService) => ({
         endPoint: config.S3Config.url,
-        ...(config.isProduction ? null : { port: 9000 }),
+        ...(config.isProduction ? null : { port: config.S3Config.port }),
         useSSL: config.isProduction,
         accessKey: config.S3Config.accessKey,
         secretKey: config.S3Config.secretKey,

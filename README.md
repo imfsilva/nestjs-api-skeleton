@@ -37,6 +37,7 @@ S3_BUCKET_NAME=skeleton
 S3_ACCESS_KEY=minio
 S3_SECRET_KEY=minio123
 S3_REGION=europe-west1
+S3_PORT=9000
 
 # Mailer
 MAILER_HOST=

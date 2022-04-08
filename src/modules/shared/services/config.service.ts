@@ -114,6 +114,7 @@ export class ConfigService {
       bucketName: this.getString('S3_BUCKET_NAME'),
       accessKey: this.getString('S3_ACCESS_KEY'),
       secretKey: this.getString('S3_SECRET_KEY'),
+      port: this.getNumber('S3_PORT'),
       region: this.getString('S3_REGION'),
     };
   }
