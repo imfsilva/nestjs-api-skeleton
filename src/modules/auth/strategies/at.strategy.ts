@@ -8,8 +8,10 @@ import { UserEntity } from '../../users/entities/user.entity';
 import { UsersService } from '../../users/users.service';
 import { ContextProvider } from '../../../common/providers';
 
+export const AT_STRATEGY_NAME = 'jwt';
+
 @Injectable()
-export class AtStrategy extends PassportStrategy(Strategy, 'jwt') {
+export class AtStrategy extends PassportStrategy(Strategy, AT_STRATEGY_NAME) {
   constructor(
     private config: ConfigService,
     private usersService: UsersService,

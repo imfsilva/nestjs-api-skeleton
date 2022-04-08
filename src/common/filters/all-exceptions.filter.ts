@@ -32,16 +32,14 @@ export class AllExceptionsFilter implements ExceptionFilter {
     const request = ctx.getRequest<Request>();
     const response = ctx.getResponse<Response>();
 
+    this.logger.error(exception);
+
     // http exceptions
     if (exception instanceof HttpException) {
       const statusCode: number = exception.getStatus();
       const exceptionData: HttpI18nMessage = exception.getResponse() as HttpI18nMessage;
 
       const { i18n, message } = exceptionData;
-
-      if (statusCode === HttpStatus.INTERNAL_SERVER_ERROR) {
-        this.logger.error(exceptionData);
-      }
 
       if (i18n) {
         // translate message if i18n property is present on exceptionData

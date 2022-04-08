@@ -8,8 +8,10 @@ import { ConfigService } from '../../shared/services/config.service';
 import { UserEntity } from '../../users/entities/user.entity';
 import { UsersService } from '../../users/users.service';
 
+export const RT_STRATEGY_NAME = 'jwt-refresh';
+
 @Injectable()
-export class RtStrategy extends PassportStrategy(Strategy, 'jwt-refresh') {
+export class RtStrategy extends PassportStrategy(Strategy, RT_STRATEGY_NAME) {
   constructor(private config: ConfigService, private usersService: UsersService) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
