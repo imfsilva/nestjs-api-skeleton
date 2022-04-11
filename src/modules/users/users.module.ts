@@ -8,17 +8,18 @@ import { UsersController } from './users.controller';
 import { UsersRepository } from './users.repository';
 import { UsersSettingsRepository } from './users-settings.repository';
 import { CreateSettingsHandler } from './handlers/create-setting.handler';
-import { S3Service } from '../shared/services/s3.service';
 import { UsersImageRepository } from './users-image.repository';
 import { ConfigService } from '../shared/services/config.service';
-import { Crypto } from '../../common/utilities';
 import { ContextProvider } from '../../common/providers';
+import { SharedModule } from '../shared/shared.module';
+import { Crypto } from '../../common/utilities';
 
 export const handlers = [CreateSettingsHandler];
 
 @Module({
   imports: [
     CqrsModule,
+    SharedModule,
     MulterModule.registerAsync({
       inject: [ConfigService],
       useFactory: (config: ConfigService) => config.multerConfig,
@@ -27,6 +28,6 @@ export const handlers = [CreateSettingsHandler];
   ],
   controllers: [UsersController],
   exports: [UsersService],
-  providers: [UsersService, S3Service, Crypto, ContextProvider, ...handlers],
+  providers: [UsersService, ContextProvider, Crypto, ...handlers],
 })
 export class UsersModule {}

@@ -5,21 +5,13 @@ import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { AtStrategy, RtStrategy } from './strategies';
 import { UsersModule } from '../users/users.module';
-import { MailerService } from '../shared/services/mailer.service';
 import { CommonUtilities, Crypto } from '../../common/utilities';
 import { ContextProvider } from '../../common/providers';
+import { SharedModule } from '../shared/shared.module';
 
 @Module({
-  imports: [forwardRef(() => UsersModule), JwtModule.register({})],
+  imports: [forwardRef(() => UsersModule), JwtModule.register({}), SharedModule],
   controllers: [AuthController],
-  providers: [
-    AuthService,
-    MailerService,
-    AtStrategy,
-    RtStrategy,
-    Crypto,
-    ContextProvider,
-    CommonUtilities,
-  ],
+  providers: [AuthService, AtStrategy, RtStrategy, ContextProvider, Crypto, CommonUtilities],
 })
 export class AuthModule {}
