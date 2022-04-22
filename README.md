@@ -1,10 +1,13 @@
-<h1 align='center'>[PROJECT'S NAME]</h1>
+<h1 align='center'>SKELETON</h1>
 
 <p align='center'>
   <img alt="logo" src="src/assets/client/images/logo.svg" width="300">
 </p>
 
 > REST API developed with NestJS.
+
+## First steps
+1. Rename `skeleton` and `SKELETON` with your project name.
 
 ## Environment variables
 

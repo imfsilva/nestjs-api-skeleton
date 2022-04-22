@@ -7,7 +7,7 @@ import { CommonUtilities } from '../../../common/utilities';
 
 export interface ResponseDto<T> {
   requestId: string;
-  statusCode: number;
+  code: number;
   data?: T;
   errors?: string[];
   message?: string;
@@ -22,7 +22,7 @@ export function transformToResponseDto<T>(payload: {
 
   const response: ResponseDto<T> = {
     requestId: GeneratorProvider.uuid(),
-    statusCode,
+    code: statusCode,
   };
 
   if (data) {

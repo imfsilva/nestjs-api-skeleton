@@ -1,23 +1,20 @@
-FROM node:16 AS builder
+# Stage 1: Build
+FROM node:gallium AS builder
 
 WORKDIR /usr/src/app
-
-COPY package.json yarn.lock ./
-
-RUN yarn install
-
 COPY . .
 
+RUN yarn install
 RUN yarn build
 
-FROM node:16 as production
+# Stage 2: Run
+FROM node:gallium as runner
 
 ARG NODE_ENV=staging
 ENV NODE_ENV=${NODE_ENV}
 
 WORKDIR /usr/src/app
-
-COPY package*.json ./
+COPY package.json yarn.lock .env.staging ./
 
 RUN yarn install --production
 

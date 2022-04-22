@@ -5,8 +5,6 @@ services:
     container_name: skeleton_nestjs
     links:
       - db
-    volumes:
-      - .:/usr/src/app
 
   db:
     image: postgres
@@ -16,7 +14,6 @@ services:
     volumes:
       - ./tmp/pgdata:/var/lib/postgresql/data
       - ./scripts/docker-postgresql-multiple-databases:/docker-entrypoint-initdb.d
-
 
   minio:
     image: minio/minio:latest

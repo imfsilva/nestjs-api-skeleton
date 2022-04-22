@@ -159,7 +159,7 @@ describe('UsersService', () => {
     it('should return user access tokens', async () => {
       jest.spyOn(jwtService, 'signAsync').mockResolvedValue('super-secret-token');
 
-      const result = await service.getTokens('userId', 'userEmail');
+      const result = await service.getTokens('userId');
       expect(result).toBeTruthy();
       expect(result.accessToken).toBeTruthy();
       expect(result.refreshToken).toBeTruthy();

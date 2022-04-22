@@ -5,6 +5,8 @@ services:
     image: node:16
     working_dir: /usr/src/app
     command: yarn start:dev
+    volumes:
+      - .:/usr/src/app
     networks:
       - skeleton
       - default

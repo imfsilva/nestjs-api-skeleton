@@ -48,7 +48,7 @@ export class AuthService {
     const isPasswordValid: boolean = this.crypto.validateHash(user.password, dto.password);
     if (!isPasswordValid) throw new InvalidCredentialsException();
 
-    const tokens: Tokens = await this.getTokens(user.id, user.email);
+    const tokens: Tokens = await this.getTokens(user.id);
     await this.updateRtHash(user, tokens.refreshToken);
 
     return plainToInstance(LoggedInDto, { ...tokens, user });
@@ -57,7 +57,7 @@ export class AuthService {
   async register(dto: RegisterDto): Promise<RegisteredDto> {
     const user: UserEntity = await this.usersService.create(dto);
 
-    const tokens: Tokens = await this.getTokens(user.id, user.email);
+    const tokens: Tokens = await this.getTokens(user.id);
     await this.updateRtHash(user, tokens.refreshToken);
 
     return plainToInstance(RegisteredDto, { ...tokens, user });
@@ -75,7 +75,7 @@ export class AuthService {
     const rtMatches: boolean = this.crypto.validateHash(user.hashedRt, rt);
     if (!rtMatches) throw new ForbiddenException('Access denied');
 
-    const tokens: Tokens = await this.getTokens(user.id, user.email);
+    const tokens: Tokens = await this.getTokens(user.id);
     await this.updateRtHash(user, tokens.refreshToken);
 
     return tokens;
@@ -86,8 +86,8 @@ export class AuthService {
     await this.usersService.setHashedRt(user, hash);
   }
 
-  async getTokens(userId: string, email: string): Promise<Tokens> {
-    const jwtPayload: JwtPayload = { userId, email };
+  async getTokens(userId: string): Promise<Tokens> {
+    const jwtPayload: JwtPayload = { userId };
 
     const [at, rt] = await Promise.all([
       this.jwtService.signAsync(jwtPayload, {
