@@ -12,17 +12,22 @@ services:
     logging:
       driver: none
     volumes:
-      - ./tmp/pgdata:/var/lib/postgresql/data
+      - pg-data:/var/lib/postgresql/data
       - ./scripts/docker-postgresql-multiple-databases:/docker-entrypoint-initdb.d
 
   minio:
     image: minio/minio:latest
     container_name: skeleton_minio
     volumes:
-      - ./tmp/minio-data:/data
+      - minio-data/data
     logging:
       driver: none
     environment:
       MINIO_ROOT_USER: minio
       MINIO_ROOT_PASSWORD: minio123
     command: minio server --console-address ":9001" /data
+
+volumes:
+  pg-data: {}
+  minio-data: {}
+
