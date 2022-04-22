@@ -19,7 +19,7 @@ services:
     image: minio/minio:latest
     container_name: skeleton_minio
     volumes:
-      - minio-data/data
+      - minio-data:/data
     logging:
       driver: none
     environment:
