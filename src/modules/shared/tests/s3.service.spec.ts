@@ -5,9 +5,22 @@ import { NestMinioModule } from 'nestjs-minio';
 
 import { S3Service } from '../services/s3.service';
 import { ConfigService } from '../services/config.service';
-import { MulterFileMock } from '../../../tests/mocks';
+import { Readable } from 'stream';
 
 const moduleMocker = new ModuleMocker(global);
+
+const MulterFileMock: Express.Multer.File = {
+  filename: '',
+  fieldname: '',
+  originalname: '',
+  encoding: '',
+  mimetype: '',
+  size: 1,
+  stream: new Readable(),
+  destination: '',
+  path: '',
+  buffer: Buffer.from(''),
+};
 
 describe('S3Service', () => {
   let service: S3Service;

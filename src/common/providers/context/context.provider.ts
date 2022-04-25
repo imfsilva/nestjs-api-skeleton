@@ -1,9 +1,9 @@
 import { getValue, setValue } from 'express-ctx';
 
-import { UserEntity } from '../../modules/users/entities/user.entity';
+import { UserEntity } from '../../../modules/users/entities/user.entity';
 
 export class ContextProvider {
-  private static readonly nameSpace = 'request';
+  private static readonly namespace = 'request';
   private static readonly authUserKey = 'user';
   private static readonly appUrl = 'appUrl';
 
@@ -16,7 +16,7 @@ export class ContextProvider {
   }
 
   private static getKeyWithNamespace(key: string): string {
-    return `${ContextProvider.nameSpace}.${key}`;
+    return `${ContextProvider.namespace}.${key}`;
   }
 
   public setAuthUser(user: UserEntity): void {

@@ -3,12 +3,11 @@ import { Test } from '@nestjs/testing';
 import { I18nService } from 'nestjs-i18n';
 import { MockFunctionMetadata, ModuleMocker } from 'jest-mock';
 
-import { AuthServiceMock, I18nServiceMock } from '../../../tests/mocks';
 import { AuthController } from '../auth.controller';
 import { AuthService } from '../auth.service';
 import { ForgotPasswordDto, LoginDto, RecoverPasswordDto, RegisterDto } from '../dtos';
 import { UserEntity } from '../../users/entities/user.entity';
-import { ExpressMock } from '../../../tests/mocks';
+import { AuthServiceMock, ExpressMock, I18nMock } from '../../../mocks';
 
 const moduleMocker = new ModuleMocker(global);
 
@@ -21,7 +20,7 @@ describe('AuthController', () => {
     })
       .useMocker((token: InstanceToken | undefined) => {
         if (token === AuthService) return AuthServiceMock;
-        if (token === I18nService) return I18nServiceMock;
+        if (token === I18nService) return I18nMock;
 
         if (typeof token === 'function') {
           const mockMetadata = moduleMocker.getMetadata(token) as MockFunctionMetadata<any, any>;

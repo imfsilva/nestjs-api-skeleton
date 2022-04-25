@@ -6,7 +6,6 @@ import { ForbiddenException } from '@nestjs/common';
 import { I18nService } from 'nestjs-i18n';
 
 import { AuthService } from '../auth.service';
-import { I18nServiceMock } from '../../../tests/mocks';
 import { Crypto } from '../../../common/utilities';
 import { UsersService } from '../../users/users.service';
 import { UserEntity } from '../../users/entities/user.entity';
@@ -22,6 +21,7 @@ import {
   RegisteredDto,
 } from '../dtos';
 import { InvalidCredentialsException, UserNotFoundException } from '../../../common/exceptions';
+import { I18nMock } from '../../../mocks';
 
 const moduleMocker = new ModuleMocker(global);
 
@@ -36,7 +36,7 @@ describe('UsersService', () => {
       providers: [AuthService],
     })
       .useMocker((token: InstanceToken | undefined) => {
-        if (token === I18nService) return I18nServiceMock;
+        if (token === I18nService) return I18nMock;
 
         if (token === ConfigService)
           return {

@@ -1,395 +1,334 @@
 {
-	"info": {
-		"_postman_id": "7c529222-4be8-4ef7-b7ef-90469e4e2215",
-		"name": "Nestjs API",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
-	},
-	"item": [
-		{
-			"name": "Auth",
-			"item": [
-				{
-					"name": "Register",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Accept-Language",
-								"value": "en",
-								"type": "text",
-								"disabled": true
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n  \"firstName\": \"Fabio\",\n  \"lastName\": \"Silva\",\n  \"email\": \"fabio@zapp-studio.com\",\n  \"password\": \"12345\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{base}}/auth/register",
-							"host": [
-								"{{base}}"
-							],
-							"path": [
-								"auth",
-								"register"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Me",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIyNDY3ZjE3YS1kMjQyLTQ1YWUtYjAwMC1lM2EwYWUyNmEzYTciLCJlbWFpbCI6ImZhYmlvMUB6YXBwLXN0dWRpby5jb20iLCJpYXQiOjE2NDQ1ODE1NTMsImV4cCI6MTY0NTg3NzU1M30.TUrJr1z6j2Y9IXqKBBJhxjT3TKONQ7HiBV8xsytShmk",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "urlencoded",
-							"urlencoded": []
-						},
-						"url": {
-							"raw": "{{base}}/auth/me",
-							"host": [
-								"{{base}}"
-							],
-							"path": [
-								"auth",
-								"me"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Login",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n  \"email\": \"fabio_3@zapp-studio.com\",\n  \"password\": \"12345\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{base}}/auth/login",
-							"host": [
-								"{{base}}"
-							],
-							"path": [
-								"auth",
-								"login"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Refresh token",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"url": {
-							"raw": "{{base}}/auth/refresh-token",
-							"host": [
-								"{{base}}"
-							],
-							"path": [
-								"auth",
-								"refresh-token"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Forgot password",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n  \"email\": \"fabio@zapp-studio.com\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{base}}/auth/forgot-password",
-							"host": [
-								"{{base}}"
-							],
-							"path": [
-								"auth",
-								"forgot-password"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Check recover password token",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{base}}/auth/check-recover-password-token/3f80be31b19fce83e1dd62627488e127637cf9695fb65231e8e249df8942",
-							"host": [
-								"{{base}}"
-							],
-							"path": [
-								"auth",
-								"check-recover-password-token",
-								"3f80be31b19fce83e1dd62627488e127637cf9695fb65231e8e249df8942"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Recover password",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"url": {
-							"raw": "{{base}}/auth/recover-password",
-							"host": [
-								"{{base}}"
-							],
-							"path": [
-								"auth",
-								"recover-password"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Logout",
-					"request": {
-						"method": "GET",
-						"header": []
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "Users",
-			"item": [
-				{
-					"name": "Get all users",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJiYWU5NWMxMi0xNDU5LTQwMDMtYTljYy0xMGY0NDUyZDM4NzkiLCJlbWFpbCI6ImZhYmlvXzNAemFwcC1zdHVkaW8uY29tIiwiaWF0IjoxNjQ0NDI2ODcxLCJleHAiOjE2NDU3MjI4NzF9.-S1lM9qUm3W-OyTtmn3iORJwJNWfs7QXCSluA4KR5Rw",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{base}}/users",
-							"host": [
-								"{{base}}"
-							],
-							"path": [
-								"users"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Get user by ID",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{base}}/users/47df7fe8-de5e-4048-a502-36b4255c9c3b",
-							"host": [
-								"{{base}}"
-							],
-							"path": [
-								"users",
-								"47df7fe8-de5e-4048-a502-36b4255c9c3b"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Delete user",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJiYWU5NWMxMi0xNDU5LTQwMDMtYTljYy0xMGY0NDUyZDM4NzkiLCJlbWFpbCI6ImZhYmlvXzNAemFwcC1zdHVkaW8uY29tIiwiaWF0IjoxNjQ0NDI2ODcxLCJleHAiOjE2NDU3MjI4NzF9.-S1lM9qUm3W-OyTtmn3iORJwJNWfs7QXCSluA4KR5Rw",
-									"type": "string"
-								}
-							]
-						},
-						"method": "DELETE",
-						"header": [
-							{
-								"key": "Accept-Language",
-								"value": "en",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "{{base}}/users/47df7fe8-de5e-4048-a502-36b4255c9c3b",
-							"host": [
-								"{{base}}"
-							],
-							"path": [
-								"users",
-								"47df7fe8-de5e-4048-a502-36b4255c9c3b"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Update user",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJiYWU5NWMxMi0xNDU5LTQwMDMtYTljYy0xMGY0NDUyZDM4NzkiLCJ0eXBlIjoiQUNDRVNTX1RPS0VOIiwicm9sZSI6IlVTRVIiLCJpYXQiOjE2NDQzMTE0MzksImV4cCI6MTY0NjkwMzQzOX0.8Oh3R2vsY12geUnqXQCj9_7snxvyfR5rpKD6WuTDzvM",
-									"type": "string"
-								}
-							]
-						},
-						"method": "PATCH",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n  \"language\": \"ES\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{base}}/users/bae95c12-1459-4003-a9cc-10f4452d3879",
-							"host": [
-								"{{base}}"
-							],
-							"path": [
-								"users",
-								"bae95c12-1459-4003-a9cc-10f4452d3879"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Upload image",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJhNmJhYTBiNS1iYzc0LTQxYmMtODNhZi1iMTA4NjRlZDNkMTkiLCJlbWFpbCI6ImZhYmlvQHphcHAtc3R1ZGlvLmNvbSIsImlhdCI6MTY0NTYyMTI4NywiZXhwIjoxNjQ2OTE3Mjg3fQ.7Goq4r-WPth430fUxtY383Zh9G7-dV8nMjDZczAh8V0",
-									"type": "string"
-								}
-							]
-						},
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "formdata",
-							"formdata": [
-								{
-									"key": "image",
-									"type": "file",
-									"src": "/Users/fsilva/Pictures/wallpapers/helloworld.jpg"
-								}
-							]
-						},
-						"url": {
-							"raw": "{{base}}/users/image",
-							"host": [
-								"{{base}}"
-							],
-							"path": [
-								"users",
-								"image"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Delete image",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJiYWU5NWMxMi0xNDU5LTQwMDMtYTljYy0xMGY0NDUyZDM4NzkiLCJlbWFpbCI6ImZhYmlvXzNAemFwcC1zdHVkaW8uY29tIiwiaWF0IjoxNjQ0NDE2NDE2LCJleHAiOjE2NDU3MTI0MTZ9.PgHr0paanzNeI3fFnmCUrluD23d-9Mzr0zUWFNxTtAM",
-									"type": "string"
-								}
-							]
-						},
-						"method": "DELETE",
-						"header": [],
-						"url": {
-							"raw": "{{base}}/users/image",
-							"host": [
-								"{{base}}"
-							],
-							"path": [
-								"users",
-								"image"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Change password",
-					"request": {
-						"method": "GET",
-						"header": []
-					},
-					"response": []
-				}
-			]
-		}
-	]
+  "info": {
+    "_postman_id": "7c529222-4be8-4ef7-b7ef-90469e4e2215",
+    "name": "Nestjs API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept-Language",
+                "value": "en",
+                "type": "text",
+                "disabled": true
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firstName\": \"Fabio\",\n  \"lastName\": \"Silva\",\n  \"email\": \"fabio@zapp-studio.com\",\n  \"password\": \"12345\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base}}/auth/register",
+              "host": ["{{base}}"],
+              "path": ["auth", "register"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Me",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIyNDY3ZjE3YS1kMjQyLTQ1YWUtYjAwMC1lM2EwYWUyNmEzYTciLCJlbWFpbCI6ImZhYmlvMUB6YXBwLXN0dWRpby5jb20iLCJpYXQiOjE2NDQ1ODE1NTMsImV4cCI6MTY0NTg3NzU1M30.TUrJr1z6j2Y9IXqKBBJhxjT3TKONQ7HiBV8xsytShmk",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": []
+            },
+            "url": {
+              "raw": "{{base}}/auth/me",
+              "host": ["{{base}}"],
+              "path": ["auth", "me"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"fabio_3@zapp-studio.com\",\n  \"password\": \"12345\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base}}/auth/login",
+              "host": ["{{base}}"],
+              "path": ["auth", "login"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Refresh token",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{base}}/auth/refresh-token",
+              "host": ["{{base}}"],
+              "path": ["auth", "refresh-token"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Forgot password",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"fabio@zapp-studio.com\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base}}/auth/forgot-password",
+              "host": ["{{base}}"],
+              "path": ["auth", "forgot-password"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Check recover password token",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base}}/auth/check-recover-password-token/3f80be31b19fce83e1dd62627488e127637cf9695fb65231e8e249df8942",
+              "host": ["{{base}}"],
+              "path": [
+                "auth",
+                "check-recover-password-token",
+                "3f80be31b19fce83e1dd62627488e127637cf9695fb65231e8e249df8942"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Recover password",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{base}}/auth/recover-password",
+              "host": ["{{base}}"],
+              "path": ["auth", "recover-password"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "GET",
+            "header": []
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Users",
+      "item": [
+        {
+          "name": "Get all users",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJiYWU5NWMxMi0xNDU5LTQwMDMtYTljYy0xMGY0NDUyZDM4NzkiLCJlbWFpbCI6ImZhYmlvXzNAemFwcC1zdHVkaW8uY29tIiwiaWF0IjoxNjQ0NDI2ODcxLCJleHAiOjE2NDU3MjI4NzF9.-S1lM9qUm3W-OyTtmn3iORJwJNWfs7QXCSluA4KR5Rw",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base}}/users",
+              "host": ["{{base}}"],
+              "path": ["users"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get user by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base}}/users/47df7fe8-de5e-4048-a502-36b4255c9c3b",
+              "host": ["{{base}}"],
+              "path": ["users", "47df7fe8-de5e-4048-a502-36b4255c9c3b"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete user",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJiYWU5NWMxMi0xNDU5LTQwMDMtYTljYy0xMGY0NDUyZDM4NzkiLCJlbWFpbCI6ImZhYmlvXzNAemFwcC1zdHVkaW8uY29tIiwiaWF0IjoxNjQ0NDI2ODcxLCJleHAiOjE2NDU3MjI4NzF9.-S1lM9qUm3W-OyTtmn3iORJwJNWfs7QXCSluA4KR5Rw",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept-Language",
+                "value": "en",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base}}/users/47df7fe8-de5e-4048-a502-36b4255c9c3b",
+              "host": ["{{base}}"],
+              "path": ["users", "47df7fe8-de5e-4048-a502-36b4255c9c3b"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update user",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJiYWU5NWMxMi0xNDU5LTQwMDMtYTljYy0xMGY0NDUyZDM4NzkiLCJ0eXBlIjoiQUNDRVNTX1RPS0VOIiwicm9sZSI6IlVTRVIiLCJpYXQiOjE2NDQzMTE0MzksImV4cCI6MTY0NjkwMzQzOX0.8Oh3R2vsY12geUnqXQCj9_7snxvyfR5rpKD6WuTDzvM",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"language\": \"ES\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base}}/users/bae95c12-1459-4003-a9cc-10f4452d3879",
+              "host": ["{{base}}"],
+              "path": ["users", "bae95c12-1459-4003-a9cc-10f4452d3879"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Upload image",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJhNmJhYTBiNS1iYzc0LTQxYmMtODNhZi1iMTA4NjRlZDNkMTkiLCJlbWFpbCI6ImZhYmlvQHphcHAtc3R1ZGlvLmNvbSIsImlhdCI6MTY0NTYyMTI4NywiZXhwIjoxNjQ2OTE3Mjg3fQ.7Goq4r-WPth430fUxtY383Zh9G7-dV8nMjDZczAh8V0",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "image",
+                  "type": "file",
+                  "src": "/Users/fsilva/Pictures/wallpapers/helloworld.jpg"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base}}/users/image",
+              "host": ["{{base}}"],
+              "path": ["users", "image"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete image",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJiYWU5NWMxMi0xNDU5LTQwMDMtYTljYy0xMGY0NDUyZDM4NzkiLCJlbWFpbCI6ImZhYmlvXzNAemFwcC1zdHVkaW8uY29tIiwiaWF0IjoxNjQ0NDE2NDE2LCJleHAiOjE2NDU3MTI0MTZ9.PgHr0paanzNeI3fFnmCUrluD23d-9Mzr0zUWFNxTtAM",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base}}/users/image",
+              "host": ["{{base}}"],
+              "path": ["users", "image"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Change password",
+          "request": {
+            "method": "GET",
+            "header": []
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
 }

@@ -1,4 +1,5 @@
 import { NestFactory } from '@nestjs/core';
+import { INestApplicationContext } from '@nestjs/common';
 import { ExpressAdapter, NestExpressApplication } from '@nestjs/platform-express';
 
 import { AppModule } from './app.module';
@@ -14,11 +15,12 @@ async function bootstrap(): Promise<NestExpressApplication> {
 
   registerGlobals(app);
 
-  const s3Service: S3Service = app.select(SharedModule).get(S3Service);
-  await s3Service.createBucketIfNotExist();
+  const sharedModule: INestApplicationContext = app.select(SharedModule);
 
-  const configService: ConfigService = app.select(SharedModule).get(ConfigService);
-  const port: string = configService.appConfig.port;
+  // init S3 bucket
+  await sharedModule.get(S3Service).createBucketIfNotExist();
+
+  const port: number = sharedModule.get(ConfigService).appConfig.port;
   await app.listen(port);
 
   const url: string = await app.getUrl();

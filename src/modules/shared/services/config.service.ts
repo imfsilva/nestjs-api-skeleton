@@ -121,7 +121,7 @@ export class ConfigService {
 
   get appConfig() {
     return {
-      port: this.getString('PORT'),
+      port: this.getNumber('PORT'),
     };
   }
 }

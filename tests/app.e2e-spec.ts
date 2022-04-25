@@ -1,19 +1,20 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { HttpStatus, INestApplication } from '@nestjs/common';
+import { Connection } from 'typeorm';
 import * as request from 'supertest';
 import faker from '@faker-js/faker';
-import { Connection } from 'typeorm';
 
 import { AppModule } from '../src/app.module';
 import { UserDto } from '../src/modules/users/dtos';
-import { testPaginationDto, testUserDto } from './dtos';
 import { ResponseDto } from '../src/modules/core/interceptors';
 import { Languages, RoleType } from '../src/common/constants';
 import { UserEntity } from '../src/modules/users/entities/user.entity';
 import { RegisteredDto, LoggedInDto, RefreshTokenDto, RegisterDto } from '../src/modules/auth/dtos';
 import { UserSettingsEntity } from '../src/modules/users/entities/user-settings.entity';
 import { registerGlobals } from '../src/config/register-globals';
-import { PaginationResponseDto } from '../dist/common/utilities/pagination/dtos/pagination-response.dto';
+import { testUserDto } from '../src/modules/users/tests/dtos/user.dto';
+import { PaginationResponseDto } from '../src/common/utilities/pagination/dtos/pagination-response.dto';
+import { testPaginationDto } from '../src/common/utilities/pagination/tests/dtos/pagination-response.dto';
 
 describe('App (e2e)', () => {
   let app: INestApplication;

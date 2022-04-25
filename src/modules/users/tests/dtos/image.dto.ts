@@ -1,4 +1,4 @@
-import { ImageDto } from '../../../src/modules/users/dtos';
+import { ImageDto } from '../../dtos';
 
 export const testImageDto = (image: ImageDto) => {
   if (!image) return;

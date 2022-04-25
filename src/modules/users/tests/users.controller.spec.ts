@@ -10,8 +10,8 @@ import { UpdateUserDto, UserDto } from '../dtos';
 import { ChangePasswordDto } from '../dtos/requests/change-password.dto';
 import { MIN_SKIP, MIN_TAKE } from '../../../common/constants';
 import { PaginationResponseDto } from '../../../common/utilities/pagination/dtos/pagination-response.dto';
-import { I18nServiceMock, MulterFileMock, UsersServiceMock } from '../../../tests/mocks';
-import { testPaginationDto } from '../../../../tests/dtos';
+import { I18nMock, MulterMock, UsersServiceMock } from '../../../mocks';
+import { testPaginationDto } from '../../../common/utilities/pagination/tests/dtos/pagination-response.dto';
 
 const moduleMocker = new ModuleMocker(global);
 
@@ -24,7 +24,7 @@ describe('UsersController', () => {
     })
       .useMocker((token: InstanceToken | undefined) => {
         if (token === UsersService) return UsersServiceMock;
-        if (token === I18nService) return I18nServiceMock;
+        if (token === I18nService) return I18nMock;
 
         if (typeof token === 'function') {
           const mockMetadata = moduleMocker.getMetadata(token) as MockFunctionMetadata<any, any>;
@@ -81,7 +81,6 @@ describe('UsersController', () => {
     it('should return a confirmation message', async () => {
       const result = await controller.delete('userId');
       expect(result).toBeTruthy();
-      expect(result).toBe('i18nMessage');
     });
   });
 
@@ -89,15 +88,13 @@ describe('UsersController', () => {
     it('should return a confirmation message', async () => {
       const result = await controller.changePassword(new UserEntity(), new ChangePasswordDto());
       expect(result).toBeTruthy();
-      expect(result).toBe('i18nMessage');
     });
   });
 
   describe('uploadFile', () => {
     it('should return a confirmation message', async () => {
-      const result = await controller.uploadFile(new UserEntity(), MulterFileMock);
+      const result = await controller.uploadFile(new UserEntity(), MulterMock);
       expect(result).toBeTruthy();
-      expect(result).toBe('i18nMessage');
     });
   });
 
@@ -105,7 +102,6 @@ describe('UsersController', () => {
     it('should return a confirmation message', async () => {
       const result = await controller.deleteFile(new UserEntity());
       expect(result).toBeTruthy();
-      expect(result).toBe('i18nMessage');
     });
   });
 });

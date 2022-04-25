@@ -76,8 +76,8 @@ export class S3Service {
     return `${S3_PUBLIC_URL}/${S3_BUCKET_NAME}/${module}/${proprietaryId}/${fileId}${fileExtension}`;
   }
 
-  getFileExtension(originalname: string): string {
-    return originalname.substring(originalname.lastIndexOf('.'), originalname.length);
+  getFileExtension(originalName: string): string {
+    return originalName.substring(originalName.lastIndexOf('.'), originalName.length);
   }
 
   async uploadSingleFile(dto: FileDto): Promise<void> {

@@ -1,6 +1,6 @@
 import { Readable } from 'stream';
 
-export const MulterFileMock: Express.Multer.File = {
+export const MulterMock: Express.Multer.File = {
   filename: '',
   fieldname: '',
   originalname: '',

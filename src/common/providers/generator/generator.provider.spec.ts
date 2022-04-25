@@ -1,7 +1,7 @@
 import { Test } from '@nestjs/testing';
 import { validate as isValidUUID } from 'uuid';
 
-import { GeneratorProvider } from '../generator.provider';
+import { GeneratorProvider } from './generator.provider';
 
 describe('GeneratorProvider', () => {
   let provider: GeneratorProvider;

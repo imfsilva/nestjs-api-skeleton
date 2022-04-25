@@ -1,8 +1,7 @@
 import { Test } from '@nestjs/testing';
 import { InstanceToken } from '@nestjs/core/injector/module';
-import { MockFunctionMetadata, ModuleMocker } from 'jest-mock';
 import { CommandBus } from '@nestjs/cqrs';
-import { getRepositoryToken } from '@nestjs/typeorm';
+import { MockFunctionMetadata, ModuleMocker } from 'jest-mock';
 import { DeleteResult } from 'typeorm';
 
 import { UsersService } from '../users.service';
@@ -20,17 +19,17 @@ import { CreateSettingDto } from '../dtos';
 import { RegisterDto } from '../../auth/dtos';
 import { MIN_SKIP, MIN_TAKE } from '../../../common/constants';
 import {
+  ContextProviderMock,
+  CreateSettingHandlerMock,
+  MulterMock,
+  QueryBuilderMock,
+  S3ServiceMock,
+} from '../../../mocks';
+import {
   EmailTakenException,
   InvalidCredentialsException,
   UserNotFoundException,
 } from '../../../common/exceptions';
-import {
-  ContextProviderMock,
-  CreateSettingHandlerMock,
-  MulterFileMock,
-  QueryBuilderMock,
-  S3ServiceMock,
-} from '../../../tests/mocks';
 
 const moduleMocker = new ModuleMocker(global);
 
@@ -60,11 +59,14 @@ describe('UsersService', () => {
     service = moduleRef.get(UsersService);
     userRepository = moduleRef.get(UsersRepository);
     cryptoService = moduleRef.get(Crypto);
-    userImageRepository = moduleRef.get(getRepositoryToken(UsersImageRepository));
+    userImageRepository = moduleRef.get(UsersImageRepository);
   });
 
   it('should be defined', () => {
     expect(service).toBeDefined();
+    expect(userRepository).toBeDefined();
+    expect(cryptoService).toBeDefined();
+    expect(userImageRepository).toBeDefined();
   });
 
   describe('totalRepositoryItems', () => {
@@ -217,7 +219,7 @@ describe('UsersService', () => {
     it('should upload a user image to S3', async () => {
       jest.spyOn(userImageRepository, 'create').mockReturnValue(new UserImageEntity());
       jest.spyOn(userImageRepository, 'save').mockResolvedValue(new UserImageEntity());
-      await expect(service.createImage(new UserEntity(), MulterFileMock)).resolves.not.toThrow();
+      await expect(service.createImage(new UserEntity(), MulterMock)).resolves.not.toThrow();
     });
   });
 

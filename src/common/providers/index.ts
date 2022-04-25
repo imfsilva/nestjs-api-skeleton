@@ -1,2 +1,2 @@
-export * from './context.provider';
-export * from './generator.provider';
+export * from './context/context.provider';
+export * from './generator/generator.provider';

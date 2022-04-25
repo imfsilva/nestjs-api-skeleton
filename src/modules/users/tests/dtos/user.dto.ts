@@ -1,6 +1,6 @@
 import { testImageDto } from './image.dto';
 import { testSettingsDto } from './settings.dto';
-import { UserDto } from '../../../src/modules/users/dtos';
+import { UserDto } from '../../dtos';
 
 export const testUserDto = (user: UserDto) => {
   expect(user.id).toBeTruthy();

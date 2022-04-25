@@ -1,5 +1,5 @@
-import { Pagination } from '../pagination/pagination';
-import { PaginationResponseDto } from '../pagination/dtos/pagination-response.dto';
+import { Pagination } from '../pagination';
+import { PaginationResponseDto } from '../dtos/pagination-response.dto';
 
 describe('Pagination', () => {
   describe('First case', () => {

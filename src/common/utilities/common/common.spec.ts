@@ -1,7 +1,7 @@
 import { Test } from '@nestjs/testing';
 
-import { CommonUtilities } from '../common';
-import { ExpressMock } from '../../../tests/mocks';
+import { CommonUtilities } from './common';
+import { ExpressMock } from '../../../mocks';
 
 describe('Common', () => {
   let commonUtilities: CommonUtilities;
@@ -25,7 +25,6 @@ describe('Common', () => {
 
   it('should return a capitalized string', () => {
     const result = CommonUtilities.capitalize('random string');
-    expect(result).toBeTruthy();
     expect(result).toBe('Random string');
   });
 });

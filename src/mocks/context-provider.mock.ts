@@ -1,4 +1,4 @@
-import { UserEntity } from '../../../../modules/users/entities/user.entity';
+import { UserEntity } from '../modules/users/entities/user.entity';
 
 export const ContextProviderMock = {
   set: jest.fn().mockReturnThis(),

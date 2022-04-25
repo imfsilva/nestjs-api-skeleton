@@ -1,4 +1,4 @@
-import { UserEntity } from '../../../../modules/users/entities/user.entity';
+import { UserEntity } from '../modules/users/entities/user.entity';
 
 const user = new UserEntity();
 

@@ -1,6 +1,6 @@
 import { Test } from '@nestjs/testing';
 
-import { Crypto } from '../crypto';
+import { Crypto } from './crypto';
 
 describe('Crypto', () => {
   let crypto: Crypto;

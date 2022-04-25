@@ -7,7 +7,6 @@ import { MockFunctionMetadata, ModuleMocker } from 'jest-mock';
 import { MailerService } from '../services/mailer.service';
 import { UserEntity } from '../../users/entities/user.entity';
 import { Languages } from '../../../common/constants';
-import { I18nServiceMock } from '../../../tests/mocks';
 
 const moduleMocker = new ModuleMocker(global);
 
@@ -19,7 +18,10 @@ describe('MailerService', () => {
       providers: [MailerService],
     })
       .useMocker((token: InstanceToken | undefined) => {
-        if (token === I18nService) return I18nServiceMock;
+        if (token === I18nService) {
+          return { translate: jest.fn().mockReturnValue('i18nMessage') };
+        }
+
         if (token === NestMailerService) {
           return { sendMail: jest.fn() };
         }
