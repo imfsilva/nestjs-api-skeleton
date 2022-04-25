@@ -25,7 +25,7 @@ export class S3Service {
     private readonly configService: ConfigService,
   ) {}
 
-  private bucketMetadata(mimetype: string): ItemBucketMetadata {
+  private static bucketMetadata(mimetype: string): ItemBucketMetadata {
     return { 'Content-type': mimetype, 'x-amz-acl': '' + 'public-read' };
   }
 
@@ -84,7 +84,7 @@ export class S3Service {
     const { moduleName, proprietaryId, file, fileId } = dto;
     const extension: string = this.getFileExtension(file.originalname);
     const filePath = `/${moduleName}/${proprietaryId}/${fileId}${extension}`;
-    const metadata: ItemBucketMetadata = this.bucketMetadata(file.mimetype);
+    const metadata: ItemBucketMetadata = S3Service.bucketMetadata(file.mimetype);
 
     await this.minioClient.putObject(
       this.configService.S3Config.bucketName,
