@@ -6,8 +6,22 @@
 
 > REST API developed with NestJS.
 
-## First steps
-1. Rename `skeleton` and `SKELETON` with your project name.
+## What's included?
+
+- [x] Swagger
+- [x] Database connection and configuration ([typeorm](https://www.npmjs.com/package/typeorm))
+- [x] i18n ([nestjs-i18n](https://www.npmjs.com/package/nestjs-i18n))
+- [x] Seeding ([typeorm-seeding](https://www.npmjs.com/package/typeorm-seeding))
+- [x] Mailing ([nodemailer](https://www.npmjs.com/package/nodemailer), [@nestjs-modules/mailer](https://www.npmjs.com/package/@nestjs-modules/mailer))
+- [x] Authentication ([@nestjs/passport](https://www.npmjs.com/package/@nestjs/passport))
+- [x] Basic User CRUD
+- [x] File uploads (local and S3 support)
+- [x] Roles management (User and Admin)
+- [x] e2e and unit tests
+- [x] Docker
+- [x] PM2 for production deploys
+- [x] A Postman collection with all the endpoints available in this skeleton (`postman-collection.json`)
+- [x] Dependabot
 
 ## Environment variables
 
@@ -57,13 +71,11 @@ ENABLE_ORM_LOGS=false
 
 ## Get started
 
+Rename `skeleton` and `SKELETON` with your project name.
+
 ### Development
 
 Create `.env.development` file in the root of the project.
-
-```shell
-$ docker network create skeleton
-```
 
 ```shell
 $ make development
@@ -72,10 +84,6 @@ $ make development
 ### Staging
 
 Create `.env.staging` file in the root of the project.
-
-```shell
-$ docker network create skeleton
-```
 
 ```shell
 $ make staging
@@ -91,7 +99,9 @@ $ yarn start:prod
 
 ## Seeds
 
-To seed the database you can use one of the following commands depending on the environment.
+To seed the database you can use one of the following commands depending on the environment. Keep in mind that the database will be truncated before the seed is run.
+
+⚠️ For `development` and `staging` environments `db` service must be up.
 
 ```shell
 $ make development-seed
@@ -112,8 +122,8 @@ DB_URL=postgresql://root:root@localhost:5432/skeleton_test
 ```
 
 ```shell
-$ yarn test // unit tests
-$ yarn test:e2e // end to end tests
+$ yarn test
+$ yarn test:e2e
 ```
 
 ⚠️ To run e2e tests, docker services `db` and `minio` must be up.
@@ -130,6 +140,6 @@ $ yarn migration:create <migration name>
 
 The migration file will be created under `src/database/migrations`.
 
-## Extra
+## Credits
 
- In the root of the project you can find a Postman project with all the available endpoints.
+Script used to generate multiple databases: https://github.com/mrts/docker-postgresql-multiple-databases
