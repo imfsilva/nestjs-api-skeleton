@@ -5686,12 +5686,12 @@ nestjs-i18n@^8.2.2:
     cookie "^0.4.1"
     string-format "^2.0.0"
 
-nestjs-minio@^2.1.13:
-  version "2.1.14"
-  resolved "https://registry.yarnpkg.com/nestjs-minio/-/nestjs-minio-2.1.14.tgz#456ba1acb048c510dda62eac8c08bcde0efbfb3a"
-  integrity sha512-uxX4qpky3kaANX6ro9yNc5hqSfjslazIxvosxYCqEPHeFbfWzKXxMO531zGC13ADQNNFL6FOsmAuX2tMk985hw==
+nestjs-minio@^2.1.15:
+  version "2.1.15"
+  resolved "https://registry.yarnpkg.com/nestjs-minio/-/nestjs-minio-2.1.15.tgz#19c0487c151e76741f27c38f55876d2857b71110"
+  integrity sha512-B/0i9jxab+x36HoD+M9Osxreqnt63IGjasljDp7srwRhM6Bjl2jJrnONqd336Ehec5lFvBDvWzyJ30qcOXr0sA==
   dependencies:
-    minio "^7.0.26"
+    minio "^7.0.27"
 
 netmask@^2.0.1:
   version "2.0.2"
