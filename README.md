@@ -14,8 +14,8 @@
 - [x] Seeding ([typeorm-seeding](https://www.npmjs.com/package/typeorm-seeding))
 - [x] Mailing ([nodemailer](https://www.npmjs.com/package/nodemailer), [@nestjs-modules/mailer](https://www.npmjs.com/package/@nestjs-modules/mailer))
 - [x] Authentication ([@nestjs/passport](https://www.npmjs.com/package/@nestjs/passport))
+- [x] File uploads ([nestjs-minio](https://www.npmjs.com/package/nestjs-minio))
 - [x] Basic User CRUD
-- [x] File uploads (local and S3 support)
 - [x] Roles management (User and Admin)
 - [x] e2e and unit tests
 - [x] Docker

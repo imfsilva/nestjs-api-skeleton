@@ -1,11 +1,10 @@
 import { Test } from '@nestjs/testing';
 import { InstanceToken } from '@nestjs/core/injector/module';
 import { MockFunctionMetadata, ModuleMocker } from 'jest-mock';
-import { NestMinioModule } from 'nestjs-minio';
+import { Readable } from 'stream';
 
 import { S3Service } from '../services/s3.service';
 import { ConfigService } from '../services/config.service';
-import { Readable } from 'stream';
 
 const moduleMocker = new ModuleMocker(global);
 
@@ -22,21 +21,20 @@ const MulterFileMock: Express.Multer.File = {
   buffer: Buffer.from(''),
 };
 
+const MinioMock = {
+  bucketExists: jest.fn().mockReturnValue(false),
+  makeBucket: jest.fn(),
+  putObject: jest.fn(),
+  removeObject: jest.fn(),
+  setBucketPolicy: jest.fn(),
+};
+
 describe('S3Service', () => {
   let service: S3Service;
 
   beforeEach(async () => {
     const moduleRef = await Test.createTestingModule({
       providers: [S3Service],
-      imports: [
-        NestMinioModule.register({
-          endPoint: 'localhost',
-          port: 9000,
-          useSSL: false,
-          accessKey: 'minio',
-          secretKey: 'minio123',
-        }),
-      ],
     })
       .useMocker((token: InstanceToken | undefined) => {
         if (token === ConfigService)
@@ -50,6 +48,8 @@ describe('S3Service', () => {
               region: 'region',
             },
           };
+
+        if (token === 'MINIO_CONNECTION') return MinioMock;
 
         if (typeof token === 'function') {
           const mockMetadata = moduleMocker.getMetadata(token) as MockFunctionMetadata<any, any>;
@@ -83,7 +83,7 @@ describe('S3Service', () => {
       });
       await expect(result).toBeTruthy();
       await expect(result).toBe(
-        `http://localhost:9000/${process.env.S3_BUCKET_NAME}/module/proprietaryId/fileId.jpg`,
+        `${process.env.S3_PUBLIC_URL}/${process.env.S3_BUCKET_NAME}/module/proprietaryId/fileId.jpg`,
       );
     });
 
@@ -96,7 +96,7 @@ describe('S3Service', () => {
         module: 'module',
       });
       await expect(result).toBeTruthy();
-      await expect(result).toBe(`http://localhost:9000/module/proprietaryId/fileId.jpg`);
+      await expect(result).toBe(`${process.env.S3_PUBLIC_URL}/module/proprietaryId/fileId.jpg`);
       process.env.NODE_ENV = 'test';
     });
   });
