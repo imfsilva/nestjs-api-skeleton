@@ -34,9 +34,7 @@ export class AuthService {
   ) {}
 
   async login(dto: LoginDto): Promise<LoggedInDto> {
-    const user: UserEntity | undefined = await this.usersService.findOne({
-      email: dto.email,
-    });
+    const user: UserEntity | undefined = await this.usersService.findOne({ email: dto.email });
     if (!user) {
       const exceptionMessage: string = await this.i18n.translate(
         'exceptions.user_email_not_found',

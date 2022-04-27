@@ -14,8 +14,8 @@ const connectionOptions: TypeOrmModuleOptions & {
 } = {
   entities: [__dirname + '/../modules/**/*.entity{.ts,.js}'],
   migrations: [__dirname + '/migrations/*{.ts,.js}'],
-  seeds: [__dirname + '/seeds/*{.ts,.js}'],
-  factories: [__dirname + '/factories/*{.ts,.js}'],
+  seeds: [__dirname + '/seeds/*{.js}'],
+  factories: [__dirname + '/factories/*{.js}'],
   dropSchema: environment === 'test',
   synchronize: environment === 'development',
   keepConnectionAlive: true,

@@ -15,10 +15,9 @@
     "start:prod": "yarn prebuild && yarn build && yarn pm2:prod",
     "pm2:prod": "pm2 start ecosystem.json --no-daemon --env production",
     "seed:config": "yarn typeorm-seeding config",
-    "seed:run": "yarn typeorm-seeding seed",
-    "seed:dev": "NODE_ENV=development yarn seed:run",
-    "seed:stag": "NODE_ENV=staging yarn seed:run",
-    "seed:prod": "NODE_ENV=production yarn seed:run",
+    "seed:dev": "NODE_ENV=development yarn typeorm-seeding seed",
+    "seed:stag": "NODE_ENV=staging yarn typeorm-seeding seed",
+    "seed:prod": "NODE_ENV=production yarn typeorm-seeding seed",
     "schema:drop:dev": "NODE_ENV=development yarn typeorm schema:drop",
     "schema:sync:dev": "NODE_ENV=development yarn typeorm schema:sync",
     "schema:drop:stag": "NODE_ENV=staging yarn typeorm schema:drop",
@@ -29,7 +28,7 @@
     "test": "NODE_ENV=test jest --runInBand",
     "test:e2e": "NODE_ENV=test jest --runInBand --config ./tests/jest-e2e.json",
     "typeorm": "ts-node ./node_modules/typeorm/cli.js --config src/database/ormconfig.ts",
-    "typeorm-seeding": "ts-node ./node_modules/typeorm-seeding/dist/cli.js --root ./src/database --configName ormconfig.ts"
+    "typeorm-seeding": "node ./node_modules/typeorm-seeding/dist/cli.js --root ./dist/database --configName ormconfig.js"
   },
   "dependencies": {
     "@nestjs-modules/mailer": "^1.6.1",

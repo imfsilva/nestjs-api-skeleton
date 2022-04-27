@@ -18,7 +18,7 @@ development-schema-drop:
 	docker-compose -f docker-compose.yml -f docker-compose.development.yml exec server yarn schema:drop:dev
 
 staging:
-	docker-compose -f docker-compose.yml -f docker-compose.staging.yml up
+	docker-compose -f docker-compose.yml -f docker-compose.staging.yml up -d
 
 staging-down:
 	docker-compose -f docker-compose.yml -f docker-compose.staging.yml down
