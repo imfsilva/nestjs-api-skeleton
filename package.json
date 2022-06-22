@@ -52,7 +52,7 @@
     "express-ctx": "^0.1.1",
     "minio": "^7.0.27",
     "nest-winston": "^1.6.2",
-    "nestjs-i18n": "^8.2.2",
+    "nestjs-i18n": "^9.1.2",
     "nestjs-minio": "^2.1.15",
     "nodemailer": "^6.7.2",
     "passport": "^0.5.2",
